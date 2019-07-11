@@ -1,0 +1,171 @@
+* { box-sizing: border-box; }
+body {
+  font-family: sans-serif;
+  max-width: 9000px;
+  margin: auto;
+  user-select: none;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+h1 { margin: 0; margin-top: 8px; }
+h1 { text-align: center; }
+h3 { margin-left: 16px; margin-bottom: 0; margin-top: 0; }
+#elements {
+  padding: 0 0.5em;
+  overflow-y: scroll;
+  height: 100%;
+}
+.elem {
+  display: inline-flex;
+  flex-direction: column;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  padding-top: 5px;
+  border-radius: 10px;
+  margin: 0.5em;
+  position: relative;
+  color: black;
+}
+.elem.ghost { opacity: 0.5; }
+.elem:hover::after { /* the hover color */
+  background: rgba(255,255,255,0.2);
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  content: ' '
+}
+.elem:active::hover { /* the hover color */
+  background: rgba(255,255,255,0.5);
+}
+.elem:active::after { /* the hover color */
+  background: rgba(255,255,255,0.5);
+}
+.elem.held {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1.5px solid rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+#status {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 500ms linear;
+  white-space: nowrap;
+}
+#status.show {
+  opacity: 1;
+  transition: opacity 100ms linear;
+}
+#status.hide {
+  opacity: 0;
+  transition: opacity 0s linear;
+}
+@keyframes grow-in {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+@keyframes bounce {
+  from { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  to { transform: scale(1); }
+}
+@keyframes fade-out-and-height {
+  from { opacity: 1; }
+  30% { opacity: 0; height: 55px; }
+  to { opacity: 0; height: 0px; }
+}
+.animate-in {
+  animation: grow-in 600ms cubic-bezier(0.23, 1, 0.320, 1);
+}
+.animate-bounce {
+  animation: bounce 600ms cubic-bezier(0.23, 1, 0.320, 1);
+}
+#helper {
+  margin: 0;
+  height: 55px;
+  line-height: 55px;
+  overflow: hidden;
+  text-align: center;
+}
+.animate-helper-out {
+  animation: fade-out-and-height 3.5s ease-in-out;
+  animation-fill-mode: forwards;
+}
+#bottom {
+  height: 2em;
+  background: black;
+  color: white;
+  display: flex;
+  flex-direction: row;
+}
+#bottom a {
+  background: cornflowerblue;
+  text-decoration: none;
+  line-height: 2em;
+  padding: 0 0.5em;
+  color: black;
+}
+#bottom a:active {
+  background: rgb(64, 106, 184)!important;
+  color: white!important;
+}
+a#moreStuff {
+  background: yellow;
+  color: black;
+}
+a#moreStuff:active {
+  background: orange!important;
+  color: red!important;
+}
+.collapsed {
+  height: 0;
+  transition: flex-basis 100ms;
+  overflow-y: hidden;
+  flex: 0 0 0px;
+}
+.collapsed > div {
+  height: 100%;
+  overflow-y: scroll;
+  padding: 1em;
+}
+.buttonSelected {
+  background: rgb(51, 86, 150)!important;
+  color: white!important;
+}
+
+body.dark {
+  color: white;
+  background: black;
+}
+body.dark #bottom {
+  color: black;
+  background: white;
+}
+body.dark #status {
+  background: rgba(255, 255, 255, 0.85);
+  color: black;
+}
+
+#loading {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#actualGame {
+  display: contents;
+}

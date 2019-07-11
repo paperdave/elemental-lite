@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Elemental Lite</title>
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="loading">
+    <h1>Loading...</h1>
+  </div>
+  <div id="actualGame" style='display:none;'>
+    <h1>Elemental Lite v1.1</h1>
+    <p id='helper'>
+      Quite a simple elemental clone. Combine two elements to create new elements.
+    </p>
+
+    <div id="elements"></div>
+    <div id="status"></div>
+    <div id="bottom">
+      <a href='#' id="openOptions">OPTIONS</a>
+      <a href='#' id="openChangelog">CHANGELOG</a>
+      <div style='flex:1'></div>
+      <a href='https://discord.gg/X9VyN42'>DISCORD</a>
+      <a id='moreStuff' href='https://davecode.me'>MORE CONTENT</a>
+    </div>
+
+    <div id="options" class="collapsed">
+      <div>
+        <h3>Elemental Lite Options</h3>
+
+        <p>
+          <input type="checkbox" id='dark-mode'> Dark Mode
+        </p>
+        <p>
+          <button id='delete-button'>Delete Savefile</button>
+        </p>
+      </div>
+    </div>
+    <div id="changelog" class="collapsed">
+      <div>
+        <h3>Elemental Lite v1.1</h3>
+        <ul>
+          <li>Feature: Added Changelog.</li>
+          <li>Feature: Element Parser.</li>
+          <li>Feature: Element Categories.</li>
+          <li>Feature: Dark Mode.</li>
+          <li>Change: Make the top area smaller.</li>
+          <li>Bug Fix: Fix multiline element names from displaying incorrectly.</li>
+        </ul>
+        <h3>Elemental Lite v1.0</h3>
+        <ul>
+          <li>A quick and dirty, single file game. Has all the basic mechanics.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src='./local-storage.js'></script>
+  <script src='./game.js'></script>
+  <script src='./options.js'></script>
+  <script src="./parser.js"></script>
+  <script src="./data.js"></script>
+  <script src="./init-data.js"></script>
+</body>
+</html>
