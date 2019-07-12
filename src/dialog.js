@@ -1,6 +1,9 @@
 // Handles a simple dialog popup
+let dialogOpen = false;
 function ShowDialog(title, textContent, buttons) {
+  if (dialogOpen) return;
   return new Promise((done) => {
+    dialogOpen = true;
     const dialogRoot = document.getElementById('dialog');
     dialogRoot.style.display = 'block';
 
@@ -39,6 +42,8 @@ function ShowDialog(title, textContent, buttons) {
         while (buttonsDiv.firstChild) {
           buttonsDiv.removeChild(buttonsDiv.firstChild);
         }
+
+        dialogOpen = false;
 
         done(i);
       });
