@@ -11,6 +11,7 @@ function fetchAndRegisterElementPack(url) {
 
 Promise.all([
   fetchAndRegisterElementPack('./elements/elemental2.txt'),
+  fetchAndRegisterElementPack('./elements/elemental3.txt'),
   // ...add more default packs
 ]).then(() => {
   document.getElementById('loading').remove();

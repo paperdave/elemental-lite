@@ -15,10 +15,13 @@ function parseElementData(data) {
     .map((line) => line.replace(/  +/g, ' '))
     // Trim the whitespace off at the ends
     .map((line) => line.trim())
-    // Remove Comments
-    .filter((line) => !(line.startsWith('#') || line.startsWith('//') || line === ''))
     // Process Each Line, there are three cases
-    .map((line) => {
+    .map((line, index) => {
+      // Remove Comments
+      if (line.startsWith('#') || line.startsWith('//') || line === '') {
+        return null;
+      }
+
       // This + That = Element (Color)
       const matchElement = line.match(regexElement);
       if (matchElement) {
@@ -61,6 +64,8 @@ function parseElementData(data) {
         return { type: 'description', description };
       }
 
-      throw Error('Cannot parse line "' + line + '"');
-    });
+      throw Error(`Cannot parse line #${index + 1} "${line}"`);
+    })
+    // Remove Comments from array, aka null objects.
+    .filter(x => x !== null);
 }
