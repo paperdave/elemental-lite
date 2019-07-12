@@ -9,6 +9,9 @@
 #  - You can redefine colors and elements which will have no effect.
 #
 
+# Display Name In-Game
+Title=Elemental 2 (Built In)
+
 # Colors
 Air:                       #B4D8FC
 Air:                       #ff0000

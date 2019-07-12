@@ -146,6 +146,72 @@ a#moreStuff:active {
   color: white!important;
 }
 
+#loading {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#actualGame {
+  display: contents;
+}
+
+#dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: none;
+}
+
+#dialog_content {
+  background: white;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 400px;
+  width: max-content;
+  padding: 1em;
+  user-select: text;
+}
+
+#dialog_buttons {
+  margin-top: 20px;
+}
+
+button {
+  background: rgb(236, 236, 236);
+  border: 1px solid black;
+}
+
+textarea.elem-pack-field {
+  width: 100%;
+  height: 200px;
+  border: 1px solid black;
+  resize: none;
+  position: relative;
+}
+textarea.elem-pack-field:focus {
+  border: 2px solid black;
+  outline: none;
+}
+
+li button {
+  margin-left: 8px;
+}
+
+#pack-add-btn {
+  margin-top: 16px;
+}
+
+#dialog_buttons button:not(:first-child) {
+  margin-left: 8px;
+}
+
 body.dark {
   color: white;
   background: black;
@@ -158,14 +224,17 @@ body.dark #status {
   background: rgba(255, 255, 255, 0.85);
   color: black;
 }
-
-#loading {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+body.dark button {
+  background: rgb(87, 87, 87);
+  border: 1px solid white;
+  color: white;
 }
-#actualGame {
-  display: contents;
+body.dark #dialog {
+  color: black;
+}
+
+#dialog_buttons button {
+  background: rgb(236, 236, 236) !important;
+  border: 1px solid black !important;
+  color: black;
 }

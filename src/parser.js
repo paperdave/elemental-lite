@@ -1,7 +1,9 @@
 // Manages parsing the element format.
-const regexElementNoCombo = /^([^(=+)]+)\(([^()=+:_]+)\)$/
-const regexElement = /^([^()=+:_]+)\+([^()=+:_]+)=([^()=+:_]+)\(([^()=+:_]+)\)$/
-const regexColor = /^([^()=+:_]+): *(#[0-9A-Fa-f]{6})$/;
+const regexElementNoCombo = /^([^{};(=+)]+)\(([^{};()=+:_]+)\)$/
+const regexElement = /^([^{};()=+:_]+)\+([^{}()=+:_]+)=([^{}()=+:_]+)\(([^{};()=+:_]+)\)$/
+const regexColor = /^([^{};()=+:_]+) *: *(#[0-9A-Fa-f]{6})$/;
+const regexTitle = /^Title *= *(.*)$/;
+const regexDescription = /^Description *= *(.*)$/;
 
 function parseElementData(data) {
   return data
@@ -44,6 +46,19 @@ function parseElementData(data) {
         const color = matchColor[2].trim();
 
         return { type: 'color', name, color };
+      }
+
+      const matchTitle = line.match(regexTitle);
+      if (matchTitle) {
+        const title = matchTitle[1].trim();
+
+        return { type: 'title', title };
+      }
+      const matchDescription = line.match(regexDescription);
+      if (matchDescription) {
+        const description = matchDescription[1].trim();
+
+        return { type: 'description', description };
       }
 
       throw Error('Cannot parse line "' + line + '"');

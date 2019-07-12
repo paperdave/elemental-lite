@@ -55,4 +55,64 @@ document.getElementById('delete-button').addEventListener('click', () => {
     localStorage.removeItem('elementSaveFile');
     location.reload();
   }
-})
+});
+
+const packAddBtn = document.getElementById('pack-add-btn');
+
+function showPackDialog(initCode) {
+  const infoParagraph = document.createElement('p');
+  infoParagraph.appendChild(document.createTextNode(
+    'Enter in the pack information into the text box and press Add.'
+  ));
+  const textField = document.createElement('textarea');
+  textField.value = initCode;
+  textField.classList.add('elem-pack-field');
+
+  ShowDialog(
+    'Add Element Pack',
+    [
+      infoParagraph,
+      textField
+    ],
+    [
+      { label: 'Add' },
+      { label: 'Cancel' },
+    ]
+  ).then((choice) => {
+    if (choice === 0) {
+      // try base64 decode
+      let source = textField.value;
+      let text = source;
+      try {
+        text = atob(text.trim());
+      } catch (error) {/* Nothing */ }
+
+      const id = Math.random().toString().substr(2);
+
+      try {
+        registerElementData(text, id);
+      } catch (error) {
+        const errorPre = document.createElement('pre');
+        const errorCode = document.createElement('code');
+        errorPre.appendChild(errorCode);
+        errorCode.appendChild(document.createTextNode(error.toString()));
+
+        ShowDialog(
+          'Error Parsing Data',
+          errorPre,
+          ['Ok']
+        ).then(() => {
+          showPackDialog(source);
+        });
+
+        return;
+      }
+
+      packSaveFile.push([id, text]);
+    }
+  });
+}
+
+packAddBtn.addEventListener('click', () => {
+  showPackDialog('');
+});

@@ -21,6 +21,7 @@
       <a href='#' id="openOptions">OPTIONS</a>
       <a href='#' id="openChangelog">CHANGELOG</a>
       <div style='flex:1'></div>
+      <a href='https://github.com/imdaveead/elemental-lite'>SOURCE</a>
       <a href='https://discord.gg/X9VyN42'>DISCORD</a>
       <a id='moreStuff' href='https://davecode.me'>MORE CONTENT</a>
     </div>
@@ -35,12 +36,20 @@
         <p>
           <button id='delete-button'>Delete Savefile</button>
         </p>
+
+        <h3>Packs</h3>
+        <div id='pack-div'>
+
+        </div>
+        <button id='pack-add-btn'>Add New</button>
       </div>
     </div>
     <div id="changelog" class="collapsed">
       <div>
         <h3>Elemental Lite v1.2</h3>
         <ul>
+          <li>Feature: Add Element Packs in the UI.</li>
+          <li>Change: Added Source Button.</li>
           <li>Bug Fix: Fix combinations being setup correctly.</li>
         </ul>
         <h3>Elemental Lite v1.1</h3>
@@ -59,7 +68,21 @@
       </div>
     </div>
   </div>
+  <div id="dialog">
+    <div id="dialog_content">
+      <h2 id="dialog_title"></h2>
+      <div id="dialog_text_content">
 
+      </div>
+      <div id="dialog_buttons">
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/clipboard-polyfill@2.8.1/build/clipboard-polyfill.js"></script>
+
+  <script src='./dialog.js'></script>
   <script src='./local-storage.js'></script>
   <script src='./game.js'></script>
   <script src='./options.js'></script>

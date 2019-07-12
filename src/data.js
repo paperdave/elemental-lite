@@ -65,13 +65,51 @@ function registerElement(name, color, recipe1, recipe2) {
   }
 }
 
-function registerElementData(data) {
+const packDiv = document.getElementById('pack-div');
+
+function registerElementData(data, id) {
   const items = parseElementData(data);
+  let title = 'Unnamed Pack';
   items.forEach((entry) => {
     if (entry.type === 'color') {
       registerColor(entry.name, entry.color);
-    } else if(entry.type === 'element') {
+    } else if (entry.type === 'element') {
       registerElement(entry.result, entry.color, entry.elem1, entry.elem2)
+    } else if (entry.type === 'title') {
+      title = entry.title;
     }
   });
+
+  const packLi = document.createElement('li');
+  const packText = document.createTextNode(title);
+  packLi.appendChild(packText);
+
+  if (!id.startsWith('builtin:')) {
+    const packRemoveButton = document.createElement('button');
+    packRemoveButton.appendChild(document.createTextNode('Remove'));
+    packRemoveButton.addEventListener('click', () => {
+      ShowDialog('Delete Pack ' + title, 'You can add it back if you want later.', ['YES', 'NO'])
+        .then(choice => {
+          if(choice === 0) {
+            let item = JSON.parse(localStorage.getItem('elementPackSaveFile'));
+            item = item.filter((item) => item[0] !== id);
+            localStorage.setItem('elementPackSaveFile', JSON.stringify(item));
+
+            location.reload();
+          }
+        });
+    });
+    packLi.appendChild(packRemoveButton);
+
+    const packCopyButton = document.createElement('button');
+    packCopyButton.appendChild(document.createTextNode('Copy Code'));
+    packCopyButton.addEventListener('click', () => {
+      clipboard.writeText(btoa(data)).then(() => {
+        setStatusText('Copied Pack Code');
+      });
+    });
+    packLi.appendChild(packCopyButton);
+  }
+
+  packDiv.appendChild(packLi);
 }
