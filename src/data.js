@@ -53,7 +53,7 @@ function registerElement(name, color, recipe1, recipe2) {
       recipe1 = recipe2;
       recipe2 = temp;
     }
-    combos[toInternalName(recipe1) + '+' + toInternalName(recipe1)] = internalName;
+    combos[toInternalName(recipe1) + '+' + toInternalName(recipe2)] = internalName;
 
     if (newElement && elementSaveFile.includes(internalName)) {
       addElementToGame(elements[internalName]);
