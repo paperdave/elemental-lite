@@ -1,17 +1,18 @@
 {
   "name": "elemental-lite",
-  "version": "1.0.0",
   "description": "Simple and lightweight remake of Elemental 2",
   "scripts": {
     "test": "run-script-os",
     "test:win32": "test.bat",
     "test:linux:darwin": "./test.sh",
     "lint": "eslint src",
-    "spelling": "cspell src/**.js src/**.html readme.md"
+    "spelling": "cspell src/**.js src/**.html readme.md",
+    "start": "http-server src"
   },
   "devDependencies": {
     "eslint": "^6.0.1",
     "eslint-config-dave": "^2.1.1",
+    "http-server": "^0.11.1",
     "run-script-os": "^1.0.7"
   },
   "repository": {
