@@ -1,12 +1,12 @@
 // load and manage loading the built in packs, also handles loading screen.
 
 function fetchAndRegisterElementPack(url) {
-  if (packSaveFile.find((x) => x[0] === 'builtin:' + url)) return;
+  if (packSavefile.find((x) => x[0] === 'builtin:' + url)) {return;}
 
   fetch(url)
-    .then(r => r.text())
-    .then(text => (registerElementData(text, 'builtin:' +url), text))
-    .then(text => packSaveFile.push(['builtin:' + url, text]));
+    .then((r) => r.text())
+    .then((text) => (registerElementData(text, 'builtin:' +url), text))
+    .then((text) => packSavefile.push(['builtin:' + url, text]));
 }
 
 Promise.all([
@@ -18,4 +18,4 @@ Promise.all([
   document.getElementById('actualGame').removeAttribute('style');
 });
 
-packSaveFile.forEach(([id, data]) => registerElementData(data, id));
+packSavefile.forEach(([id, data]) => registerElementData(data, id));

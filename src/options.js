@@ -51,8 +51,8 @@ darkModeCheckbox.addEventListener('change', () => {
 darkModeCheckbox.click();
 
 document.getElementById('delete-button').addEventListener('click', () => {
-  if(confirm('Delete All Data')) {
-    localStorage.removeItem('elementSaveFile');
+  if (confirm('Delete All Data')) {
+    localStorage.removeItem('elementSavefile');
     location.reload();
   }
 });
@@ -72,7 +72,7 @@ function showPackDialog(initCode) {
     'Add Element Pack',
     [
       infoParagraph,
-      textField
+      textField,
     ],
     [
       { label: 'Add' },
@@ -81,11 +81,13 @@ function showPackDialog(initCode) {
   ).then((choice) => {
     if (choice === 0) {
       // try base64 decode
-      let source = textField.value;
+      const source = textField.value;
       let text = source;
       try {
         text = atob(text.trim());
-      } catch (error) {/* Nothing */ }
+      } catch (error) {
+        /* Nothing */
+      }
 
       const id = Math.random().toString().substr(2);
 
@@ -108,7 +110,7 @@ function showPackDialog(initCode) {
         return;
       }
 
-      packSaveFile.push([id, text]);
+      packSavefile.push([id, text]);
     }
   });
 }

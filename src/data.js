@@ -1,5 +1,4 @@
 // Manages what elements and combinations exist
-
 const elements = {};
 const combos = {};
 const colors = {};
@@ -18,16 +17,17 @@ function toInternalName(name) {
 function registerColor(name, color) {
   const internalName = toInternalName(name);
 
-  if (internalName in colors) return;
+  if (internalName in colors) {return;}
   colors[internalName] = { color, name };
 
   const rgb = parseInt(color.substring(1), 16);
-  const r = (rgb >> 16) & 0xff;
-  const g = (rgb >> 8) & 0xff;
-  const b = (rgb >> 0) & 0xff;
-  const value = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+  const r = rgb >> 16 & 0xff;
+  const g = rgb >> 8 & 0xff;
+  const b = rgb >> 0 & 0xff;
+  // calculate color brightness
+  const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-  if (value > 100) {
+  if (brightness > 100) {
     colorStyleTag.sheet.insertRule(`.${internalName} { background-color: ${color} }`, 0);
   } else {
     colorStyleTag.sheet.insertRule(`.${internalName} { background-color: ${color}; color: white }`, 0);
@@ -44,7 +44,7 @@ function registerElement(name, color, recipe1, recipe2) {
       id: ++nextID,
       name,
       color: toInternalName(color),
-    }
+    };
   }
 
   if (recipe1 && recipe2) {
@@ -55,13 +55,11 @@ function registerElement(name, color, recipe1, recipe2) {
     }
     combos[toInternalName(recipe1) + '+' + toInternalName(recipe2)] = internalName;
 
-    if (newElement && elementSaveFile.includes(internalName)) {
+    if (newElement && elementSavefile.includes(internalName)) {
       addElementToGame(elements[internalName]);
     }
-  } else {
-    if (newElement) {
-      addElementToGame(elements[internalName]);
-    }
+  } else if (newElement) {
+    addElementToGame(elements[internalName]);
   }
 }
 
@@ -74,7 +72,7 @@ function registerElementData(data, id) {
     if (entry.type === 'color') {
       registerColor(entry.name, entry.color);
     } else if (entry.type === 'element') {
-      registerElement(entry.result, entry.color, entry.elem1, entry.elem2)
+      registerElement(entry.result, entry.color, entry.elem1, entry.elem2);
     } else if (entry.type === 'title') {
       title = entry.title;
     }
@@ -89,11 +87,11 @@ function registerElementData(data, id) {
     packRemoveButton.appendChild(document.createTextNode('Remove'));
     packRemoveButton.addEventListener('click', () => {
       ShowDialog('Delete Pack ' + title, 'You can add it back if you want later.', ['YES', 'NO'])
-        .then(choice => {
-          if(choice === 0) {
-            let item = JSON.parse(localStorage.getItem('elementPackSaveFile'));
+        .then((choice) => {
+          if (choice === 0) {
+            let item = JSON.parse(localStorage.getItem('elementPackSavefile'));
             item = item.filter((item) => item[0] !== id);
-            localStorage.setItem('elementPackSaveFile', JSON.stringify(item));
+            localStorage.setItem('elementPackSavefile', JSON.stringify(item));
 
             location.reload();
           }

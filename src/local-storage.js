@@ -1,14 +1,14 @@
-const elementSaveFile = JSON.parse(localStorage.getItem('elementSaveFile') || '[]');
-elementSaveFile.push = function (...args) {
-  Array.prototype.push.apply(elementSaveFile, args);
-  localStorage.setItem('elementSaveFile', JSON.stringify(elementSaveFile));
-}
+const elementSavefile = JSON.parse(localStorage.getItem('elementSavefile') || '[]');
+elementSavefile.push = function (...args) {
+  Array.prototype.push.apply(elementSavefile, args);
+  localStorage.setItem('elementSavefile', JSON.stringify(elementSavefile));
+};
 
-const packSaveFile = JSON.parse(localStorage.getItem('elementPackSaveFile') || '[]');
-packSaveFile.push = function (...args) {
-  Array.prototype.push.apply(packSaveFile, args);
-  localStorage.setItem('elementPackSaveFile', JSON.stringify(packSaveFile));
-}
+const packSavefile = JSON.parse(localStorage.getItem('elementPackSavefile') || '[]');
+packSavefile.push = function (...args) {
+  Array.prototype.push.apply(packSavefile, args);
+  localStorage.setItem('elementPackSavefile', JSON.stringify(packSavefile));
+};
 
 const isDarkMode = JSON.parse(localStorage.getItem('elementDarkMode') || 'false');
 function setIsDarkMode(isDarkMode) {

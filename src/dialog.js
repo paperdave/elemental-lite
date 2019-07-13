@@ -1,7 +1,7 @@
 // Handles a simple dialog popup
 let dialogOpen = false;
 function ShowDialog(title, textContent, buttons) {
-  if (dialogOpen) return;
+  if (dialogOpen) {return;}
   return new Promise((done) => {
     dialogOpen = true;
     const dialogRoot = document.getElementById('dialog');
@@ -17,7 +17,7 @@ function ShowDialog(title, textContent, buttons) {
 
     if (typeof textContent === 'string') {
       textContainer.appendChild(document.createTextNode(textContent));
-    } else if(Array.isArray(textContent)) {
+    } else if (Array.isArray(textContent)) {
       textContent.forEach((elem) => {
         if (typeof elem === 'string') {
           textContainer.appendChild(document.createTextNode(elem));
@@ -49,5 +49,5 @@ function ShowDialog(title, textContent, buttons) {
       });
       buttonsDiv.appendChild(btn);
     });
-  })
+  });
 }

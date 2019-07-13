@@ -1,0 +1,33 @@
+{
+  "name": "elemental-lite",
+  "version": "1.0.0",
+  "description": "Simple and lightweight remake of Elemental 2",
+  "scripts": {
+    "test": "run-script-os",
+    "test:win32": "test.bat",
+    "test:linux:darwin": "./test.sh",
+    "lint": "eslint src",
+    "spelling": "cspell src/**.js src/**.html readme.md"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-dave": "^2.1.1",
+    "run-script-os": "^1.0.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imdaveead/elemental-lite.git"
+  },
+  "author": "Dave Caruso",
+  "license": "MIT",
+  "homepage": "https://davecode.me/elemental-lite",
+  "private": true,
+  "babel": {},
+  "eslintConfig": {
+    "extends": "dave",
+    "rules": {
+      "no-undef": 0,
+      "no-unused-vars": 0
+    }
+  }
+}

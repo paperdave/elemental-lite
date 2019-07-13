@@ -62,7 +62,7 @@ function addElementToGame(element) {
     return;
   }
 
-  elementSaveFile.push(toInternalName(element.name));
+  elementSavefile.push(toInternalName(element.name));
 
   const dom = ElementDom(element);
 
@@ -85,13 +85,13 @@ function addElementToGame(element) {
         } else {
           setStatusText('New Element: ' + elem.name + '.');
           merges++;
-          if (merges == 3) {
+          if (merges === 3) {
             fadeHelper();
           }
         }
         addElementToGame(elem);
       } else {
-        setStatusText('Discovered Nothing.')
+        setStatusText('Discovered Nothing.');
       }
 
       holdingElement = null;
