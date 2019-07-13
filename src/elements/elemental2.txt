@@ -14,7 +14,6 @@ Title=Elemental 2 (Built In)
 
 # Colors
 Air:                       #B4D8FC
-Air:                       #ff0000
 Earth:                     #B79370
 Fire:                      #FF934C
 Water:                     #4C93FF
