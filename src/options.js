@@ -51,10 +51,16 @@ darkModeCheckbox.addEventListener('change', () => {
 darkModeCheckbox.click();
 
 document.getElementById('delete-button').addEventListener('click', () => {
-  if (confirm('Delete All Data')) {
-    localStorage.removeItem('elementSavefile');
-    location.reload();
-  }
+  ShowDialog(
+    'Delete All Save Data',
+    'This does not delete your element packs',
+    ['YES', 'NO']
+  ).then((choice) => {
+    if (choice === 0) {
+      localStorage.removeItem('elementSavefile');
+      location.reload();
+    }
+  })
 });
 
 const packAddBtn = document.getElementById('pack-add-btn');
@@ -118,3 +124,8 @@ function showPackDialog(initCode) {
 packAddBtn.addEventListener('click', () => {
   showPackDialog('');
 });
+
+if (localStorage.openOptionsOnLoad) {
+  localStorage.removeItem('openOptionsOnLoad');
+  optionsButton.click();
+}

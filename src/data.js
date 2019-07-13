@@ -93,6 +93,7 @@ function registerElementData(data, id) {
             item = item.filter((item) => item[0] !== id);
             localStorage.setItem('elementPackSavefile', JSON.stringify(item));
 
+            localStorage.setItem('openOptionsOnLoad', true);
             location.reload();
           }
         });
@@ -110,4 +111,6 @@ function registerElementData(data, id) {
   }
 
   packDiv.appendChild(packLi);
+
+  updateElementCounter();
 }
