@@ -1,7 +1,9 @@
-const elementSavefile = JSON.parse(localStorage.getItem('elementSavefile') || '[]');
-elementSavefile.push = function (...args) {
-  Array.prototype.push.apply(elementSavefile, args);
-  localStorage.setItem('elementSavefile', JSON.stringify(elementSavefile));
+const elementSavefile = [...new Set(JSON.parse(localStorage.getItem('elementSavefile') || '[]'))];
+elementSavefile.push = function (arg) {
+  if (!elementSavefile.includes(arg)) {
+    Array.prototype.push.apply(elementSavefile, [arg]);
+    localStorage.setItem('elementSavefile', JSON.stringify(elementSavefile));
+  }
 };
 
 const packSavefile = JSON.parse(localStorage.getItem('elementPackSavefile') || '[]');

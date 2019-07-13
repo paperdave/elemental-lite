@@ -42,6 +42,11 @@ function setStatusText(text) {
   }
 }
 
+const elemCounter = document.getElementById('elem-count');
+function updateElementCounter() {
+  elemCounter.innerText = `${elementSavefile.length} / ${Object.keys(elements).length}`;
+}
+
 // Makes the HTML for an element
 function ElementDom({ color, name }) {
   const elem = document.createElement('div');
@@ -63,6 +68,7 @@ function addElementToGame(element) {
   }
 
   elementSavefile.push(toInternalName(element.name));
+  updateElementCounter();
 
   const dom = ElementDom(element);
 

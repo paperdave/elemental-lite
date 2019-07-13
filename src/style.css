@@ -238,3 +238,11 @@ body.dark #dialog {
   border: 1px solid black !important;
   color: black;
 }
+
+#elem-count {
+  position: fixed;
+  top: 16px;
+  right: 32px;
+  font-size: 24px;
+  font-weight: bold;
+}
