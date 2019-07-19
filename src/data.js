@@ -53,7 +53,11 @@ function registerElement(name, color, recipe1, recipe2) {
       recipe1 = recipe2;
       recipe2 = temp;
     }
-    combos[toInternalName(recipe1) + '+' + toInternalName(recipe2)] = internalName;
+
+    const key = toInternalName(recipe1) + '+' + toInternalName(recipe2);
+
+    if (!combos[key]) { combos[key] = []; }
+    if (!combos[key].includes(internalName)) { combos[key].push(internalName); }
 
     if (newElement && elementSavefile.includes(internalName)) {
       addElementToGame(elements[internalName]);
@@ -85,8 +89,7 @@ function registerElementData(data, id) {
   packText.classList.add('name');
   packLi.appendChild(packText);
   const packSpacing = document.createElement('span');
-  packSpacing.appendChild(document.createTextNode(title));
-  packSpacing.classList.add('name');
+  packSpacing.classList.add('spacing');
   packLi.appendChild(packSpacing);
 
   if (!id.startsWith('builtin:')) {

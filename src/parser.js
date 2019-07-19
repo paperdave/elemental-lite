@@ -1,6 +1,6 @@
 // Manages parsing the element format.
 const regexElementNoCombo = /^([^{};(=+)]+)\(([^{};()=+:_]+)\)$/;
-const regexElement = /^([^{};()=+:_]+)\+([^{}()=+:_]+)=([^{}()=+:_]+)\(([^{};()=+:_]+)\)$/;
+const regexElement = /^([^{};()=+:_]+|\([^{};()=+:_]+\) *)\+([^{}()=+:_]+| *\([^{};()=+:_]+\) *)=([^{}()=+:_]+)\(([^{};()=+:_]+)\)$/;
 const regexColor = /^([^{};()=+:_]+) *: *(#[0-9A-Fa-f]{6})$/;
 const regexTitle = /^Title *= *(.*)$/;
 const regexDescription = /^Description *= *(.*)$/;

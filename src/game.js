@@ -32,19 +32,22 @@ function fadeHelper() {
   }
 }
 
+let timer = false;
 function setStatusText(text) {
+  if (timer) {clearTimeout(timer);}
   statusContainer.innerText = text;
   if (!statusContainer.classList.contains('show')) {
     statusContainer.classList.add('show');
-    setTimeout(() => {
+    timer = setTimeout(() => {
       statusContainer.classList.remove('show');
+      timer = false;
     }, 1000);
   }
 }
 
 const elemCounter = document.getElementById('elem-count');
 function updateElementCounter() {
-  elemCounter.innerText = `${elementSavefile.length} / ${Object.keys(elements).length}`;
+  elemCounter.innerText = `${elementSavefile.length} / ${Object.keys(elements).length + 1}`;
 }
 
 // Makes the HTML for an element
@@ -73,29 +76,52 @@ function addElementToGame(element) {
   const dom = ElementDom(element);
 
   dom.addEventListener('click', (ev) => {
+    const foundElems = [];
+    function tryCombo(id1, id2) {
+      const combo = id1 + '+' + id2;
+      if (combos[combo]) {
+        combos[combo].forEach((elemID) => {
+          if (foundElems.includes(elements[elemID])) {
+            return;
+          }
+          const elem = elements[elemID];
+          foundElems.push(elem);
+        });
+      }
+    }
+
     if (holdingElement) {
       const id1 = toInternalName(element.name);
       const id2 = toInternalName(holdingElement.name);
 
-      let combo;
-      if (id1 < id2) {
-        combo = id1 + '+' + id2;
-      } else {
-        combo = id2 + '+' + id1;
-      }
-      if (combos[combo]) {
-        const elem = elements[combos[combo]];
-        const alreadyExistingDom = document.querySelector(`[data-element="${elem.id}"]`);
-        if (alreadyExistingDom) {
-          setStatusText('Rediscovered Element: ' + elem.name + '.');
-        } else {
-          setStatusText('New Element: ' + elem.name + '.');
-          merges++;
-          if (merges === 3) {
-            fadeHelper();
-          }
+      tryCombo(id1, id2);
+      tryCombo(id2, id1);
+      tryCombo('*', id1);
+      tryCombo('*', id2);
+      tryCombo(id1, '*');
+      tryCombo(id2, '*');
+      tryCombo(`(${element.color})`, id2);
+      tryCombo(`(${holdingElement.color})`, id1);
+      tryCombo(`(${element.color})`, `${holdingElement.color}`);
+      tryCombo(`(${holdingElement.color})`, `${element.color}`);
+
+      if (foundElems.length !== 0) {
+        merges++;
+        if (merges === 3) {
+          fadeHelper();
         }
-        addElementToGame(elem);
+        const text = foundElems
+          .map((elem) => {
+            const alreadyExistingDom = document.querySelector(`[data-element="${elem.id}"]`);
+            if (alreadyExistingDom) {
+              return 'Rediscovered Element: ' + elem.name + '.';
+            }
+            return 'New Element: ' + elem.name + '.';
+          })
+          .join('\n');
+        setStatusText(text);
+
+        foundElems.forEach((elem) => addElementToGame(elem));
       } else {
         setStatusText('Discovered Nothing.');
       }
