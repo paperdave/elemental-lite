@@ -52,7 +52,9 @@
         <ul>
           <li>Feature: Element Counter.</li>
           <li>Feature: Parser Errors will tell the line number.</li>
+          <li>Feature: Drag a file to add it.</li>
           <li>Change: Re-open options when deleting a pack and reloading page.</li>
+          <li>Bug Fix: Really long pack names cannot be removed.</li>
           <li>Bug Fix: Dialogs cant be opened if they already are open.</li>
         </ul>
         <h3>Elemental Lite v1.2</h3>
@@ -76,20 +78,24 @@
         </ul>
       </div>
     </div>
+    <div id="drop-info">
+      <h2>Drop an Element Pack File to Add it.</h2>
+    </div>
   </div>
   <div id="dialog">
     <div id="dialog_content">
       <h2 id="dialog_title"></h2>
       <div id="dialog_text_content">
-
+  
       </div>
       <div id="dialog_buttons">
-
+  
       </div>
     </div>
   </div>
 
   <script src="https://unpkg.com/clipboard-polyfill@2.8.1/build/clipboard-polyfill.js"></script>
+  <script src="http://danml.com/js/download.js"></script>
 
   <script src='./dialog.js'></script>
   <script src='./local-storage.js'></script>
@@ -97,6 +103,7 @@
   <script src='./options.js'></script>
   <script src="./parser.js"></script>
   <script src="./data.js"></script>
+  <script src="./drag-upload.js"></script>
   <script src="./init-data.js"></script>
 </body>
 </html>

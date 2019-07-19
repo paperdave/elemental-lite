@@ -12,6 +12,7 @@ body {
 h1 { margin: 0; margin-top: 8px; }
 h1 { text-align: center; }
 h3 { margin-left: 16px; margin-bottom: 0; margin-top: 0; }
+a { -webkit-user-drag: none; }
 #elements {
   padding: 0 0.5em;
   overflow-y: scroll;
@@ -157,6 +158,12 @@ a#moreStuff:active {
   display: contents;
 }
 
+#dialog_title {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
 #dialog {
   position: fixed;
   top: 0;
@@ -174,6 +181,7 @@ a#moreStuff:active {
   left: 50%;
   transform: translate(-50%, -50%);
   min-width: 400px;
+  max-width: calc(100vw - 20px);
   width: max-content;
   padding: 1em;
   user-select: text;
@@ -245,4 +253,39 @@ body.dark #dialog {
   right: 32px;
   font-size: 24px;
   font-weight: bold;
+}
+
+#drop-info {
+  display: none;
+}
+body.is-dropping-file #drop-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+#drop-info h2 {
+  color: white;
+}
+
+#pack-div li {
+  display: flex;
+}
+#pack-div li .name {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#pack-div li .spacing {
+  flex: 1 0 1px;
+}
+#pack-div li button {
+  flex: 0 0;
+  flex-basis: auto;
 }

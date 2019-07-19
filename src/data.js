@@ -79,8 +79,15 @@ function registerElementData(data, id) {
   });
 
   const packLi = document.createElement('li');
-  const packText = document.createTextNode(title);
+  packLi.appendChild(document.createTextNode('- '));
+  const packText = document.createElement('span');
+  packText.appendChild(document.createTextNode(title));
+  packText.classList.add('name');
   packLi.appendChild(packText);
+  const packSpacing = document.createElement('span');
+  packSpacing.appendChild(document.createTextNode(title));
+  packSpacing.classList.add('name');
+  packLi.appendChild(packSpacing);
 
   if (!id.startsWith('builtin:')) {
     const packRemoveButton = document.createElement('button');
@@ -108,6 +115,13 @@ function registerElementData(data, id) {
       });
     });
     packLi.appendChild(packCopyButton);
+
+    const packDownloadButton = document.createElement('button');
+    packDownloadButton.appendChild(document.createTextNode('Download'));
+    packDownloadButton.addEventListener('click', () => {
+      download(data, title, '.txt', 'text/plain');
+    });
+    packLi.appendChild(packDownloadButton);
   }
 
   packDiv.appendChild(packLi);
