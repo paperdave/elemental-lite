@@ -1,12 +1,14 @@
 // Manages parsing the element format.
 const regexElementNoCombo = /^([^{};(=+)]+)\(([^!*{};()=+:\-_]+)\)$/;
-const regexElement = /^([^!*{};()=+:\-_]+|\([^!*{};()=+:\-_]+\) *)\+([^{}()=+:_]+| *\([^!*{};()=+:\-_]+\) *)=([^{}()=+:_]+)\(([^!*{};()=+:\-_]+)\)$/;
-const regexColor = /^([^!*{};()=+:\-_]+) *: *(#[0-9A-Fa-f]{6})$/;
+const regexElement = /^([^!*{};()=+:\-_]+|\([^!*{};()=+:\-_]+\) *)\+([^{}()=+:_]+| *\([^!*{};()=+:\-_]+\) *)=([^{}()=+:_]+)\(([^!*{};()=:\-_]+)\)$/;
+const regexColor = /^([^!*{};()=:\-_]+) *: *(#[0-9A-Fa-f]{6})$/;
 const regexTitle = /^Title *= *(.*)$/;
 const regexDescription = /^Description *= *(.*)$/;
 const regexElemComment = /^([^!*{};()=+:\-_]+) *- *(.*)$/;
 
 function parseElementData(data) {
+  const colors = ['none'];
+
   return data
     // Split by newlines
     .split('\n')
@@ -31,6 +33,8 @@ function parseElementData(data) {
         const result = matchElement[3].trim();
         const color = matchElement[4].trim();
 
+        if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
+
         return { type: 'element', elem1, elem2, result, color };
       }
 
@@ -40,6 +44,8 @@ function parseElementData(data) {
         const result = matchElementNoCombo[1].trim();
         const color = matchElementNoCombo[2].trim();
 
+        if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
+
         return { type: 'element', result, color };
       }
 
@@ -48,6 +54,8 @@ function parseElementData(data) {
       if (matchColor) {
         const name = matchColor[1].trim();
         const color = matchColor[2].trim();
+
+        colors.push(toInternalName(name));
 
         return { type: 'color', name, color };
       }

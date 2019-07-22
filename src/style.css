@@ -25,7 +25,7 @@ a { -webkit-user-drag: none; }
   height: 80px;
   text-align: center;
   padding-top: 5px;
-  border-radius: 10px;
+  border-radius: 15px;
   margin: 0.5em;
   position: relative;
   color: black;
@@ -292,4 +292,14 @@ body.is-dropping-file #drop-info {
 #pack-div li button {
   flex: 0 0;
   flex-basis: auto;
+}
+
+.color0 {
+  border: 1px solid black;
+  background: white;
+}
+body.dark .color0 {
+  background: black;
+  border: 1px solid white;
+  color: white;
 }

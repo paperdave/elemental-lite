@@ -56,7 +56,7 @@ function updateElementCounter() {
 function ElementDom({ color, name }) {
   const elem = document.createElement('div');
   elem.appendChild(document.createTextNode(name));
-  elem.className = `elem ${color}`;
+  elem.className = `elem ${toCSSValidName(color)}`;
   return elem;
 }
 // Adds an element and has most element logic

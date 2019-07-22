@@ -60,12 +60,12 @@ document.getElementById('delete-button').addEventListener('click', () => {
       localStorage.removeItem('elementSavefile');
       location.reload();
     }
-  })
+  });
 });
 
 const packAddBtn = document.getElementById('pack-add-btn');
 
-function showPackDialog(initCode) {
+function showPackDialog(initCode, isEditMode, packID) {
   const infoParagraph = document.createElement('p');
   infoParagraph.appendChild(document.createTextNode(
     'Enter in the pack information into the text box and press Add.'
@@ -75,13 +75,13 @@ function showPackDialog(initCode) {
   textField.classList.add('elem-pack-field');
 
   ShowDialog(
-    'Add Element Pack',
+    isEditMode ? 'Edit Element Pack' : 'Add Element Pack',
     [
       infoParagraph,
       textField,
     ],
     [
-      { label: 'Add' },
+      { label: isEditMode ? 'Save' : 'Add' },
       { label: 'Cancel' },
     ]
   ).then((choice) => {
@@ -98,25 +98,36 @@ function showPackDialog(initCode) {
       const id = Math.random().toString().substr(2);
 
       try {
-        registerElementData(text, id);
+        if (isEditMode) {
+          parseElementData(text);
+          packSavefile.find((x) => x[0] === packID)[1] = text;
+          localStorage.setItem('elementPackSavefile', JSON.stringify(packSavefile));
+          setNeedsReload();
+        } else {
+          registerElementData(text, id);
+        }
       } catch (error) {
         const errorPre = document.createElement('pre');
         const errorCode = document.createElement('code');
         errorPre.appendChild(errorCode);
         errorCode.appendChild(document.createTextNode(error.toString()));
 
+        console.error(error);
+
         ShowDialog(
           'Error Parsing Data',
           errorPre,
           ['Ok']
         ).then(() => {
-          showPackDialog(source);
+          showPackDialog(source, isEditMode, packID);
         });
 
         return;
       }
 
-      packSavefile.push([id, text]);
+      if (!isEditMode) {
+        packSavefile.push([id, text]);
+      }
     }
   });
 }

@@ -14,6 +14,13 @@ function toInternalName(name) {
     .map((word, i) => i === 0 ? word : word.charAt(0).toUpperCase() + word.substring(1))
     .join('');
 }
+const colorCssMap = [];
+function toCSSValidName(name) {
+  if (!colorCssMap.includes(name)) {
+    colorCssMap.push(name);
+  }
+  return 'color' + colorCssMap.indexOf(name);
+}
 
 function registerColor(name, color) {
   const internalName = toInternalName(name);
@@ -29,9 +36,9 @@ function registerColor(name, color) {
   const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
   if (brightness > 100) {
-    colorStyleTag.sheet.insertRule(`.${internalName} { background-color: ${color} }`, 0);
+    colorStyleTag.sheet.insertRule(`.${toCSSValidName(internalName)} { background-color: ${color} }`, 0);
   } else {
-    colorStyleTag.sheet.insertRule(`.${internalName} { background-color: ${color}; color: white }`, 0);
+    colorStyleTag.sheet.insertRule(`.${toCSSValidName(internalName)} { background-color: ${color}; color: white }`, 0);
   }
 }
 
@@ -75,10 +82,10 @@ function setNeedsReload() {
 }
 
 function registerElementData(data, id) {
+  const items = parseElementData(data);
   const isBuiltIn = id.startsWith('builtin:');
   const disabled = disabledSavefile.includes(id);
-  const items = parseElementData(data);
-  let title = 'Unnamed Pack';
+  let title = 'Unnamed Pack #' + parseInt(id).toString(36).toUpperCase().substr(0, 5);
   items.forEach((entry) => {
     if (entry.type === 'title') {
       title = entry.title;
@@ -112,6 +119,9 @@ function registerElementData(data, id) {
             item = item.filter((item) => item[0] !== id);
             localStorage.setItem('elementPackSavefile', JSON.stringify(item));
 
+            packLi.style.opacity = 0.2;
+            packLi.style.pointerEvents = 'none';
+
             setNeedsReload();
           }
         });
@@ -120,6 +130,16 @@ function registerElementData(data, id) {
     packRemoveButton.setAttribute('disabled', true);
   }
   packLi.appendChild(packRemoveButton);
+  const packEditButton = document.createElement('button');
+  packEditButton.appendChild(document.createTextNode('Edit'));
+  if (!isBuiltIn) {
+    packEditButton.addEventListener('click', () => {
+      showPackDialog(data, true, id);
+    });
+  } else {
+    packEditButton.setAttribute('disabled', true);
+  }
+  packLi.appendChild(packEditButton);
 
   const packCopyButton = document.createElement('button');
   packCopyButton.appendChild(document.createTextNode('Copy Code'));
@@ -163,3 +183,6 @@ function registerElementData(data, id) {
 
   updateElementCounter();
 }
+
+registerColor('None');
+toCSSValidName('none');
