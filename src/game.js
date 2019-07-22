@@ -47,7 +47,9 @@ function setStatusText(text) {
 
 const elemCounter = document.getElementById('elem-count');
 function updateElementCounter() {
-  elemCounter.innerText = `${elementSavefile.length} / ${Object.keys(elements).length + 1}`;
+  const total = Object.keys(elements).length;
+  const has = elementSavefile.length;
+  elemCounter.innerText = `${has} / ${total} (${((total === 0 ? 1 : has / total) * 100).toFixed(1)}%)`;
 }
 
 // Makes the HTML for an element

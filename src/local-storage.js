@@ -6,10 +6,29 @@ elementSavefile.push = function (arg) {
   }
 };
 
-const packSavefile = JSON.parse(localStorage.getItem('elementPackSavefile') || '[]').filter((x) => !x[0].startsWith('builtin:'));
+const packSavefile = JSON.parse(localStorage.getItem('elementPackSavefile') || '[]')
+  .filter((x) => !x[0].startsWith('builtin:'));
 packSavefile.push = function (...args) {
   Array.prototype.push.apply(packSavefile, args);
   localStorage.setItem('elementPackSavefile', JSON.stringify(packSavefile));
+};
+
+const disabledSavefile = JSON.parse(localStorage.getItem('elementPackDisabled') || '[]');
+disabledSavefile.add = function (arg) {
+  if (!disabledSavefile.includes(arg)) {
+    disabledSavefile.push(arg);
+    localStorage.setItem('elementPackDisabled', JSON.stringify(disabledSavefile));
+    return true;
+  }
+  return false;
+};
+disabledSavefile.remove = function (arg) {
+  if (disabledSavefile.includes(arg)) {
+    disabledSavefile.splice(disabledSavefile.indexOf(arg), 1);
+    localStorage.setItem('elementPackDisabled', JSON.stringify(disabledSavefile));
+    return true;
+  }
+  return false;
 };
 
 const isDarkMode = JSON.parse(localStorage.getItem('elementDarkMode') || 'false');

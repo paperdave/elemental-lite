@@ -124,8 +124,12 @@ function showPackDialog(initCode) {
 packAddBtn.addEventListener('click', () => {
   showPackDialog('');
 });
+document.getElementById('btn-reload').addEventListener('click', () => {
+  localStorage.setItem('elementOpenOptionsOnLoad', 'oh hell yeah');
+  location.reload();
+});
 
-if (localStorage.openOptionsOnLoad) {
-  localStorage.removeItem('openOptionsOnLoad');
+if (localStorage.elementOpenOptionsOnLoad) {
+  localStorage.removeItem('elementOpenOptionsOnLoad');
   optionsButton.click();
 }

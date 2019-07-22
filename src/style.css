@@ -237,6 +237,9 @@ body.dark button {
   border: 1px solid white;
   color: white;
 }
+button:disabled {
+  opacity: 0.8;
+}
 body.dark #dialog {
   color: black;
 }
@@ -281,6 +284,7 @@ body.is-dropping-file #drop-info {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin-left: 8px;
 }
 #pack-div li .spacing {
   flex: 1 0 1px;

@@ -70,38 +70,40 @@ function registerElement(name, color, recipe1, recipe2) {
 
 const packDiv = document.getElementById('pack-div');
 
+function setNeedsReload() {
+  document.getElementById('reload-tip').style.display = 'contents';
+}
+
 function registerElementData(data, id) {
+  const isBuiltIn = id.startsWith('builtin:');
+  const disabled = disabledSavefile.includes(id);
   const items = parseElementData(data);
   let title = 'Unnamed Pack';
   items.forEach((entry) => {
-    if (entry.type === 'color') {
-      registerColor(entry.name, entry.color);
-    } else if (entry.type === 'element') {
-      registerElement(entry.result, entry.color, entry.elem1, entry.elem2);
-    } else if (entry.type === 'title') {
+    if (entry.type === 'title') {
       title = entry.title;
-    } else if (entry.type === 'comment') {
-      const internalName = toInternalName(entry.elem);
-      if (!comments[internalName]) {
-        comments[internalName] = new Set();
+    }
+    if (!disabled) {
+      if (entry.type === 'color') {
+        registerColor(entry.name, entry.color);
+      } else if (entry.type === 'element') {
+        registerElement(entry.result, entry.color, entry.elem1, entry.elem2);
+      } else if (entry.type === 'comment') {
+        const internalName = toInternalName(entry.elem);
+        if (!comments[internalName]) {
+          comments[internalName] = new Set();
+        }
+        comments[internalName].add(entry.comment);
       }
-      comments[internalName].add(entry.comment);
     }
   });
 
   const packLi = document.createElement('li');
   packLi.appendChild(document.createTextNode('- '));
-  const packText = document.createElement('span');
-  packText.appendChild(document.createTextNode(title));
-  packText.classList.add('name');
-  packLi.appendChild(packText);
-  const packSpacing = document.createElement('span');
-  packSpacing.classList.add('spacing');
-  packLi.appendChild(packSpacing);
 
-  if (!id.startsWith('builtin:')) {
-    const packRemoveButton = document.createElement('button');
-    packRemoveButton.appendChild(document.createTextNode('Remove'));
+  const packRemoveButton = document.createElement('button');
+  packRemoveButton.appendChild(document.createTextNode('Remove'));
+  if (!isBuiltIn) {
     packRemoveButton.addEventListener('click', () => {
       ShowDialog('Delete Pack ' + title, 'You can add it back if you want later.', ['YES', 'NO'])
         .then((choice) => {
@@ -110,31 +112,54 @@ function registerElementData(data, id) {
             item = item.filter((item) => item[0] !== id);
             localStorage.setItem('elementPackSavefile', JSON.stringify(item));
 
-            localStorage.setItem('openOptionsOnLoad', true);
-            location.reload();
+            setNeedsReload();
           }
         });
     });
-    packLi.appendChild(packRemoveButton);
-
-    const packCopyButton = document.createElement('button');
-    packCopyButton.appendChild(document.createTextNode('Copy Code'));
-    packCopyButton.addEventListener('click', () => {
-      clipboard.writeText(btoa(data)).then(() => {
-        setStatusText('Copied Pack Code');
-      });
-    });
-    packLi.appendChild(packCopyButton);
-
-    const packDownloadButton = document.createElement('button');
-    packDownloadButton.appendChild(document.createTextNode('Download'));
-    packDownloadButton.addEventListener('click', () => {
-      download(data, title, '.txt', 'text/plain');
-    });
-    packLi.appendChild(packDownloadButton);
+  } else {
+    packRemoveButton.setAttribute('disabled', true);
   }
+  packLi.appendChild(packRemoveButton);
 
-  packDiv.appendChild(packLi);
+  const packCopyButton = document.createElement('button');
+  packCopyButton.appendChild(document.createTextNode('Copy Code'));
+  packCopyButton.addEventListener('click', () => {
+    clipboard.writeText(btoa(data)).then(() => {
+      setStatusText('Copied Pack Code');
+    });
+  });
+  packLi.appendChild(packCopyButton);
+
+  const packDownloadButton = document.createElement('button');
+  packDownloadButton.appendChild(document.createTextNode('Download'));
+  packDownloadButton.addEventListener('click', () => {
+    download(data, title, '.txt', 'text/plain');
+  });
+  packLi.appendChild(packDownloadButton);
+
+  const packEnableDisableButton = document.createElement('input');
+  packEnableDisableButton.type = 'checkbox';
+  packEnableDisableButton.checked = !disabled;
+  packEnableDisableButton.addEventListener('change', (ev) => {
+    if (packEnableDisableButton.checked) {
+      disabledSavefile.remove(id);
+    } else {
+      disabledSavefile.add(id);
+    }
+    setNeedsReload();
+  });
+  packLi.appendChild(packEnableDisableButton);
+
+  const packText = document.createElement('span');
+  packText.appendChild(document.createTextNode(title));
+  packText.classList.add('name');
+  packLi.appendChild(packText);
+
+  if (isBuiltIn) {
+    packDiv.insertBefore(packLi, packDiv.firstChild);
+  } else {
+    packDiv.appendChild(packLi);
+  }
 
   updateElementCounter();
 }

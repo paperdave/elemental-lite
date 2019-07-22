@@ -10,7 +10,7 @@
     <h1>Loading...</h1>
   </div>
   <div id="actualGame" style='display:none;'>
-    <h1>Elemental Lite v1.3</h1>
+    <h1>Elemental Lite v1.4</h1>
     <div id='elem-count'>
     </div>
     <p id='helper'>
@@ -32,9 +32,11 @@
       <div>
         <h3>Elemental Lite Options</h3>
 
-        <p>
-          <input type="checkbox" id='dark-mode'> Dark Mode
-        </p>
+        <label>
+          <p>
+            <input type="checkbox" id='dark-mode'> Dark Mode
+          </p>
+        </label>
         <p>
           <button id='delete-button'>Delete Savefile</button>
         </p>
@@ -44,6 +46,10 @@
 
         </div>
         <button id='pack-add-btn'>Add New</button>
+        <div id='reload-tip' style='display:none'>
+          <button id='btn-reload'>Reload</button>
+          <span>You need to reload the page to apply changes.</span>
+        </div>
       </div>
     </div>
     <div id="changelog" class="collapsed">
@@ -51,6 +57,8 @@
         <h3>Elemental Lite v1.4</h3>
         <ul>
           <li>Feature: Element Comments / Description.</li>
+          <li>Feature: Disable Packs without removing it.</li>
+          <li>Bug Fix: You can click the text "Dark Mode" to toggle the switch.</li>
         </ul>
         <h3>Elemental Lite v1.3</h3>
         <ul>
@@ -65,6 +73,8 @@
         </ul>
         <h3>Elemental Lite v1.2</h3>
         <ul>
+          <li>Major: Make the project use many more files to increase organization.</li>
+          <li>Feature: Element Format Parser.</li>
           <li>Feature: Add Element Packs in the UI.</li>
           <li>Change: Added Source Button.</li>
           <li>Bug Fix: Fix combinations being setup correctly.</li>
@@ -92,7 +102,6 @@
     <div id="dialog_content">
       <h2 id="dialog_title"></h2>
       <div id="dialog_text_content">
-  
       </div>
       <div id="dialog_buttons">
   
