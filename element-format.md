@@ -28,7 +28,12 @@ Air (Air)
 Air + Air = Steam (Air)
 
 #
+#   To add comments to an element, use a dash.
+#
+Air - A Piece of Air.
+
+#
 #   Element and Color names cannot contain the following characters
-#      {};()=+:_
+#      {};()=+:_-*!
 #
 ```

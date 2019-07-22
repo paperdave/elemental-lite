@@ -1,9 +1,10 @@
 // Manages parsing the element format.
-const regexElementNoCombo = /^([^{};(=+)]+)\(([^{};()=+:_]+)\)$/;
-const regexElement = /^([^{};()=+:_]+|\([^{};()=+:_]+\) *)\+([^{}()=+:_]+| *\([^{};()=+:_]+\) *)=([^{}()=+:_]+)\(([^{};()=+:_]+)\)$/;
-const regexColor = /^([^{};()=+:_]+) *: *(#[0-9A-Fa-f]{6})$/;
+const regexElementNoCombo = /^([^{};(=+)]+)\(([^!*{};()=+:\-_]+)\)$/;
+const regexElement = /^([^!*{};()=+:\-_]+|\([^!*{};()=+:\-_]+\) *)\+([^{}()=+:_]+| *\([^!*{};()=+:\-_]+\) *)=([^{}()=+:_]+)\(([^!*{};()=+:\-_]+)\)$/;
+const regexColor = /^([^!*{};()=+:\-_]+) *: *(#[0-9A-Fa-f]{6})$/;
 const regexTitle = /^Title *= *(.*)$/;
 const regexDescription = /^Description *= *(.*)$/;
+const regexElemComment = /^([^!*{};()=+:\-_]+) *- *(.*)$/;
 
 function parseElementData(data) {
   return data
@@ -62,6 +63,14 @@ function parseElementData(data) {
         const description = matchDescription[1].trim();
 
         return { type: 'description', description };
+      }
+
+      const matchComment = line.match(regexElemComment);
+      if (matchComment) {
+        const elem = matchComment[1].trim();
+        const comment = matchComment[2].trim();
+
+        return { type: 'comment', comment, elem };
       }
 
       throw Error(`Cannot parse line #${index + 1} "${line}"`);

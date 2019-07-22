@@ -45,6 +45,11 @@ Earth (Earth)
 Fire (Fire)
 Water (Water)
 
+# Base Element Descriptions
+Air - Weight: 0
+Air - It's just fucking air.
+Fire - Spicy
+
 # Elements
 Air + Earth = Dust (Air)
 Air + Fire = Sun (Space)

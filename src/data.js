@@ -1,5 +1,6 @@
 // Manages what elements and combinations exist
 const elements = {};
+const comments = {};
 const combos = {};
 const colors = {};
 
@@ -79,6 +80,12 @@ function registerElementData(data, id) {
       registerElement(entry.result, entry.color, entry.elem1, entry.elem2);
     } else if (entry.type === 'title') {
       title = entry.title;
+    } else if (entry.type === 'comment') {
+      const internalName = toInternalName(entry.elem);
+      if (!comments[internalName]) {
+        comments[internalName] = new Set();
+      }
+      comments[internalName].add(entry.comment);
     }
   });
 

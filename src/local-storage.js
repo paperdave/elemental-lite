@@ -6,7 +6,7 @@ elementSavefile.push = function (arg) {
   }
 };
 
-const packSavefile = JSON.parse(localStorage.getItem('elementPackSavefile') || '[]');
+const packSavefile = JSON.parse(localStorage.getItem('elementPackSavefile') || '[]').filter((x) => !x[0].startsWith('builtin:'));
 packSavefile.push = function (...args) {
   Array.prototype.push.apply(packSavefile, args);
   localStorage.setItem('elementPackSavefile', JSON.stringify(packSavefile));
