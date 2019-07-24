@@ -1,7 +1,7 @@
 # Elemental 2 Raw Data by Cary Huang... in the Elemental Lite format
 #
-# This file serves as the "format guide" for elements, as its not the same as
-# the one in Elemental 2
+# This file serves as the "format guide/example " for elements, as it's not
+# the same as the one in Elemental 2
 #
 # Some key things to note:
 #  - You can use multiple spaces to separate things to make it line up.
@@ -44,11 +44,6 @@ Air (Air)
 Earth (Earth)
 Fire (Fire)
 Water (Water)
-
-# Base Element Descriptions
-Air - Weight: 0
-Air - It's just fucking air.
-Fire - Spicy
 
 # Elements
 Air + Earth = Dust (Air)
@@ -266,3 +261,12 @@ Gravel + Tool = Flint (Earth)
 Flint + Mineral = Fire (Fire)
 Fire + House = Ash (Fire)
 House + People = Civilization (Civilization)
+
+# Extras to make everything create-able
+Mammal + Fire = Human (People)
+
+# Element Descriptions
+Air - Contains Oxygen, Carbon Dioxide, some Nitrogen, and More!
+Fire - Can be very hot.
+Earth - The construct of all ground in this world.
+Water - The element that makes up all of the oceans.

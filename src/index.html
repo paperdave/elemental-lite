@@ -21,6 +21,20 @@
       <div data-category='none'></div>
     </div>
     <div id="status"></div>
+    <div id="info-pane">
+      <div id="info-elem" class="elem"></div>
+      <div id='info-info'>
+        <h3>Element #<span id='info-id'></span></h3>
+        <li>
+          <span id='info-combo'></span> combinations that create this.
+        </li>
+        <li>
+          This element is used to make <span id='info-uses'></span> elements.
+        </li>
+        <div id='info-comments'>
+        </div>
+      </div>
+    </div>
     <div id="bottom">
       <a href='#' id="openOptions">OPTIONS</a>
       <a href='#' id="openChangelog">CHANGELOG</a>
@@ -56,16 +70,19 @@
     </div>
     <div id="changelog" class="collapsed">
       <div>
-        <h3>Elemental Lite v1.4</h3>
+        <h3>Elemental Lite v1.4 (2019-07-23)</h3>
         <ul>
           <li>Feature: Element Comments / Description.</li>
           <li>Feature: Disable Packs without removing it.</li>
           <li>Feature: Edit Packs.</li>
           <li>Feature: Built in "None" Category.</li>
+          <li>Feature: Element Info (Right Click).</li>
+          <li>Change: Added recipe for Human in base pack.</li>
           <li>Bug Fix: You can click the text "Dark Mode" to toggle the switch.</li>
           <li>Bug Fix: When using fancy characters in the color it would fail.</li>
+          <li>Bug Fix: Element Counter actually counts correctly.</li>
         </ul>
-        <h3>Elemental Lite v1.3</h3>
+        <h3>Elemental Lite v1.3 (2019-07-18)</h3>
         <ul>
           <li>Feature: Split Combinations.</li>
           <li>Feature: Wildcard Combinations.</li>
@@ -76,7 +93,7 @@
           <li>Bug Fix: Really long pack names cannot be removed.</li>
           <li>Bug Fix: Dialogs cant be opened if they already are open.</li>
         </ul>
-        <h3>Elemental Lite v1.2</h3>
+        <h3>Elemental Lite v1.2 (2019-07-12)</h3>
         <ul>
           <li>Major: Make the project use many more files to increase organization.</li>
           <li>Feature: Element Format Parser.</li>
@@ -84,7 +101,7 @@
           <li>Change: Added Source Button.</li>
           <li>Bug Fix: Fix combinations being setup correctly.</li>
         </ul>
-        <h3>Elemental Lite v1.1</h3>
+        <h3>Elemental Lite v1.1 (2019-07-11)</h3>
         <ul>
           <li>Feature: Added Changelog.</li>
           <li>Feature: Element Parser.</li>
@@ -93,7 +110,7 @@
           <li>Change: Make the top area smaller.</li>
           <li>Bug Fix: Fix multiline element names from displaying incorrectly.</li>
         </ul>
-        <h3>Elemental Lite v1.0</h3>
+        <h3>Elemental Lite v1.0 (2019-07-10)</h3>
         <ul>
           <li>A quick and dirty, single file game. Has all the basic mechanics.</li>
         </ul>
@@ -109,13 +126,16 @@
       <div id="dialog_text_content">
       </div>
       <div id="dialog_buttons">
-  
+
       </div>
     </div>
   </div>
 
   <script src="https://unpkg.com/clipboard-polyfill@2.8.1/build/clipboard-polyfill.js"></script>
   <script src="http://danml.com/js/download.js"></script>
+  <script src="https://unpkg.com/showdown@1.9.0/dist/showdown.min.js"></script>
+
+  <script>const converter = new showdown.Converter();</script>
 
   <script src='./dialog.js'></script>
   <script src='./local-storage.js'></script>

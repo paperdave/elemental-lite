@@ -1,7 +1,9 @@
 // The actual game ui
 const elementContainer = document.getElementById('elements');
 const statusContainer = document.getElementById('status');
+const infoContainer = document.getElementById('info-pane');
 
+let infoOpen = false;
 let holdingElement = null;
 let holdingElementDom = null;
 
@@ -21,6 +23,23 @@ document.addEventListener('click', (ev) => {
       holdingElementDom = null;
     }
   }
+  if (!(ev.path && ev.path.includes(infoContainer))) {
+    if (infoOpen) {
+      infoContainer.style.display = 'none';
+      infoOpen = false;
+    }
+  }
+});
+document.addEventListener('contextmenu', (ev) => {
+  if (ev.path && ev.path.includes(infoContainer)) {
+    infoOpen = false;
+    infoContainer.style.display = 'none';
+    ev.preventDefault();
+  }
+});
+document.getElementById('elements').addEventListener('scroll', (ev) => {
+  infoOpen = false;
+  infoContainer.style.display = 'none';
 });
 
 let merges = 0;
@@ -48,7 +67,7 @@ function setStatusText(text) {
 const elemCounter = document.getElementById('elem-count');
 function updateElementCounter() {
   const total = Object.keys(elements).length;
-  const has = elementSavefile.length;
+  const has = elementSavefile.filter((x) => x in elements).length;
   elemCounter.innerText = `${has} / ${total} (${((total === 0 ? 1 : has / total) * 100).toFixed(1)}%)`;
 }
 
@@ -150,6 +169,53 @@ function addElementToGame(element) {
       holdingElementDom.style.top = ev.pageY + 2 + 'px';
       document.body.appendChild(holdingElementDom);
     }
+  });
+
+  dom.addEventListener('contextmenu', (ev) => {
+    holdingElement = null;
+    if (holdingElementDom) {
+      holdingElementDom.remove();
+      holdingElementDom = null;
+    }
+    ev.preventDefault();
+
+    dom.style.height = '100px';
+    dom.style.top = '-10px';
+    dom.scrollIntoView({ block: 'nearest' });
+    dom.style.height = '';
+    dom.style.top = '';
+
+    const rect = dom.getBoundingClientRect();
+
+    const flipY = rect.top > innerHeight - 200 - 32;
+    const flipX = rect.left > innerWidth - 460 - 32;
+
+    infoContainer.style.left = rect.left - 10 - (flipX ? 460 - 80 - 20 : 0) + 'px';
+    infoContainer.style.top = rect.top - 10 - (flipY ? 200 - 80 - 20 : 0) + 'px';
+    infoContainer.style.flexDirection = flipX ? 'row-reverse' : 'row';
+    infoContainer.querySelector('#info-elem').style.alignSelf = flipY ? 'flex-end' : 'flex-start';
+
+    setTimeout(() => {
+      infoContainer.style.display = 'flex';
+      infoOpen = true;
+    }, 0);
+
+    const stats = elementStats[toInternalName(element.name)];
+
+    infoContainer.querySelector('#info-elem').className = 'elem ' + toCSSValidName(element.color);
+    infoContainer.querySelector('#info-elem').innerText = element.name;
+    infoContainer.querySelector('#info-id').innerText = element.id;
+    infoContainer.querySelector('#info-combo').innerText = stats.uses;
+    infoContainer.querySelector('#info-uses').innerText = stats.creates;
+
+    const commentDiv = infoContainer.querySelector('#info-comments');
+    while (commentDiv.firstChild) {
+      commentDiv.removeChild(commentDiv.firstChild);
+    }
+
+    (comments[toInternalName(element.name)] || []).forEach((comment) => {
+      commentDiv.innerHTML += converter.makeHtml(comment);
+    });
   });
 
   dom.setAttribute('data-element', element.id);

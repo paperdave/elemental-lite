@@ -1,8 +1,9 @@
 // Manages what elements and combinations exist
 const elements = {};
+const elementStats = {};
 const comments = {};
 const combos = {};
-const colors = {};
+const colors = { none: 'initial' };
 
 const colorStyleTag = document.createElement('style');
 document.head.appendChild(colorStyleTag);
@@ -14,7 +15,7 @@ function toInternalName(name) {
     .map((word, i) => i === 0 ? word : word.charAt(0).toUpperCase() + word.substring(1))
     .join('');
 }
-const colorCssMap = [];
+const colorCssMap = ['none'];
 function toCSSValidName(name) {
   if (!colorCssMap.includes(name)) {
     colorCssMap.push(name);
@@ -42,7 +43,24 @@ function registerColor(name, color) {
   }
 }
 
-let nextID = 1;
+let nextID = 0;
+
+function getStats(name) {
+  const internalName = toInternalName(name);
+  if (!elementStats[internalName]) {
+    elementStats[internalName] = {
+      // how many combos this is used in; easy
+      uses: 0,
+      // how many combos this creates; easy
+      creates: 0,
+      // how long the tree is; hard
+      complexity: null,
+      // the least complex recipe that creates this; hard
+      simplestRecipe: null,
+    };
+  }
+  return elementStats[internalName];
+}
 
 function registerElement(name, color, recipe1, recipe2) {
   const internalName = toInternalName(name);
@@ -70,6 +88,10 @@ function registerElement(name, color, recipe1, recipe2) {
     if (newElement && elementSavefile.includes(internalName)) {
       addElementToGame(elements[internalName]);
     }
+
+    getStats(name).uses++;
+    getStats(recipe1).creates++;
+    getStats(recipe2).creates++;
   } else if (newElement) {
     addElementToGame(elements[internalName]);
   }
@@ -183,6 +205,3 @@ function registerElementData(data, id) {
 
   updateElementCounter();
 }
-
-registerColor('None');
-toCSSValidName('none');
