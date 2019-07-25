@@ -306,6 +306,10 @@ body.dark .color0 {
   color: white;
 }
 
+body.dark #info-pane {
+  background: #303030;
+}
+
 #info-pane {
   background: white;
   position: fixed;
