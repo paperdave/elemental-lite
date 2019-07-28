@@ -267,6 +267,6 @@ Mammal + Fire = Human (People)
 
 # Element Descriptions
 Air - Contains Oxygen, Carbon Dioxide, some Nitrogen, and More!
-Fire - Can be very hot.
+Fire - Invented by cavemen to kill each other with.
 Earth - The construct of all ground in this world.
 Water - The element that makes up all of the oceans.
