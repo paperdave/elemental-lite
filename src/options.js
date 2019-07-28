@@ -165,7 +165,9 @@ window.addEventListener('load', () => {
           ['YES', 'NO']
         ).then((choice) => {
           if (choice === 0) {
-            registerElementData(text);
+            const id = Math.random().toString().substr(2);
+            registerElementData(text, id);
+            packSavefile.push([id, text]);
           }
         });
       } catch (error) {
