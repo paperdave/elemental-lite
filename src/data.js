@@ -166,7 +166,7 @@ function registerElementData(data, id) {
   const packCopyButton = document.createElement('button');
   packCopyButton.appendChild(document.createTextNode('Copy Code'));
   packCopyButton.addEventListener('click', () => {
-    clipboard.writeText(btoa(data)).then(() => {
+    clipboard.writeText(location.href.replace(/#.*/, '') + '#add:' + btoa(data)).then(() => {
       setStatusText('Copied Pack Code');
     });
   });

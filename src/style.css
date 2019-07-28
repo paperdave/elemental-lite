@@ -41,7 +41,7 @@ a { -webkit-user-drag: none; }
   left: 0;
   width: 80px;
   height: 80px;
-  border-radius: 10px;
+  border-radius: 15px;
   content: ' '
 }
 .elem:active::hover { /* the hover color */
@@ -328,4 +328,19 @@ body.dark #info-pane {
   height: 100%;
   padding-right: 8px;
   padding-left: 8px;
+}
+
+img.header {
+  height: 50px;
+  width: calc((1278 / 175) * 50px);
+  margin: auto;
+  margin-top: 20px;
+}
+body.dark img.header {
+  filter: invert(1);
+}
+#version {
+  position: fixed;
+  top: 5px;
+  left: 5px;
 }

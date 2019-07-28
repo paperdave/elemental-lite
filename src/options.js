@@ -88,7 +88,7 @@ function showPackDialog(initCode, isEditMode, packID) {
     if (choice === 0) {
       // try base64 decode
       const source = textField.value;
-      let text = source;
+      let text = source.replace(/^https?:\/\/.*?#add:(.*)$/, '$1');
       try {
         text = atob(text.trim());
       } catch (error) {
@@ -144,3 +144,41 @@ if (localStorage.elementOpenOptionsOnLoad) {
   localStorage.removeItem('elementOpenOptionsOnLoad');
   optionsButton.click();
 }
+
+window.addEventListener('load', () => {
+  function onPopState() {
+    if (location.hash.startsWith('#add:')) {
+      let text = location.hash.substr(5);
+      try {
+        text = atob(text.trim());
+      } catch (error) {
+        /* Nothing */
+      }
+
+      try {
+        const data = parseElementData(text);
+        const title = (data.find((x) => x.type === 'title') || { title: 'Unnamed Pack' }).title;
+        const description = (data.find((x) => x.type === 'description') || { description: '(no pack description)' }).description;
+        ShowDialog(
+          `Add Pack ${title}?`,
+          description,
+          ['YES', 'NO']
+        );
+      } catch (error) {
+        const errorPre = document.createElement('pre');
+        const errorCode = document.createElement('code');
+        errorPre.appendChild(errorCode);
+        errorCode.appendChild(document.createTextNode(error.toString()));
+
+        ShowDialog(
+          'Error Parsing Data',
+          errorPre,
+          ['Ok']
+        );
+      }
+    }
+    location.hash = '#';
+  }
+  onPopState();
+  window.addEventListener('popstate', onPopState);
+});

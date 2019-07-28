@@ -11,6 +11,7 @@
 
 # Display Name In-Game
 Title=Elemental 2 (Built In)
+Description=Elemental 2 Raw Data by Cary Huang... in the Elemental Lite format
 
 # Colors
 Air:                       #B4D8FC
@@ -268,5 +269,6 @@ Mammal + Fire = Human (People)
 # Element Descriptions
 Air - Contains Oxygen, Carbon Dioxide, some Nitrogen, and More!
 Fire - Invented by cavemen to kill each other with.
-Earth - The construct of all ground in this world.
-Water - The element that makes up all of the oceans.
+Earth - We live on it, yet we keep trying to kill it.
+Water - Required you drink at least 8 glasses a day.
+Sun - A great big ball of fire floating up above.

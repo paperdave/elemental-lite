@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+  <meta data-game-version='1.5'>
   <title>Elemental Lite</title>
 
   <link rel="stylesheet" href="./style.css">
@@ -10,9 +11,9 @@
     <h1>Loading...</h1>
   </div>
   <div id="actualGame" style='display:none;'>
-    <h1>Elemental Lite v1.4</h1>
-    <div id='elem-count'>
-    </div>
+    <img class="header" src="header.png" alt="Elemental Lite Title">
+    <div id='version'></div>
+    <div id='elem-count'></div>
     <p id='helper'>
       Quite a simple elemental clone. Combine two elements to create new elements.
     </p>
@@ -72,8 +73,11 @@
       <div>
         <h3>Elemental Lite v1.5 (unreleased)</h3>
         <ul>
+          <li>Feature: A Logo.</li>
           <li>Feature: Escape Sequences for using special characters.</li>
+          <li>Feature: URL Packs.</li>
           <li>Bug Fix: Dark Mode Info Panel.</li>
+          <li>Change: Modify load process to make caching work better.</li>
         </ul>
         <h3>Elemental Lite v1.4 (2019-07-23)</h3>
         <ul>
@@ -136,19 +140,40 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/clipboard-polyfill@2.8.1/build/clipboard-polyfill.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.js"></script>
-  <script src="https://unpkg.com/showdown@1.9.0/dist/showdown.min.js"></script>
+  <script>
+    let converter;
+    const version = 'v' + document.querySelector('[data-game-version]').getAttribute('data-game-version');
 
-  <script>const converter = new showdown.Converter();</script>
+    Promise.all([
+      "https://unpkg.com/clipboard-polyfill@2.8.1/build/clipboard-polyfill.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.js",
+      "https://unpkg.com/showdown@1.9.0/dist/showdown.min.js",
+    ].map((url) => {
+      return new Promise((done) => {
+        const tag = document.createElement('script');
+        tag.src = url;
+        tag.onload = done;
+        document.body.appendChild(tag);
+      });
+    })).then(() => {
+      converter = new showdown.Converter();
+      document.getElementById('version').innerText = version;
+      [
+        './dialog.js',
+        './local-storage.js',
+        './game.js',
+        './options.js',
+        './parser.js',
+        './data.js',
+        './drag-upload.js',
+        './init-data.js',
+      ].forEach((url) => {
+        const tag = document.createElement('script');
+        tag.src = url + '?v=' + version;
+        document.body.appendChild(tag);
+      });
+    })
 
-  <script src='./dialog.js'></script>
-  <script src='./local-storage.js'></script>
-  <script src='./game.js'></script>
-  <script src='./options.js'></script>
-  <script src="./parser.js"></script>
-  <script src="./data.js"></script>
-  <script src="./drag-upload.js"></script>
-  <script src="./init-data.js"></script>
+  </script>
 </body>
 </html>
