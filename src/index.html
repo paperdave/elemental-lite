@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta data-game-version='1.5'>
+  <meta data-game-version='1.5.1'>
   <title>Elemental Lite</title>
 
   <link rel="stylesheet" href="./style.css">
@@ -71,7 +71,7 @@
     </div>
     <div id="changelog" class="collapsed">
       <div>
-        <h3>Elemental Lite v1.5 (unreleased)</h3>
+        <h3>Elemental Lite v1.5 (2019-07-23)</h3>
         <ul>
           <li>Feature: A Logo.</li>
           <li>Feature: Escape Sequences for using special characters.</li>
@@ -156,9 +156,10 @@
         document.body.appendChild(tag);
       });
     })).then(() => {
+      async function seq(a) {for (let x of a) { await x(); }}
       converter = new showdown.Converter();
       document.getElementById('version').innerText = version;
-      [
+      seq([
         './dialog.js',
         './local-storage.js',
         './game.js',
@@ -167,11 +168,12 @@
         './data.js',
         './drag-upload.js',
         './init-data.js',
-      ].forEach((url) => {
+      ].map((url) => () => new Promise(done => {
         const tag = document.createElement('script');
         tag.src = url + '?v=' + version;
+        tag.onload = done;
         document.body.appendChild(tag);
-      });
+      })));
     })
 
   </script>

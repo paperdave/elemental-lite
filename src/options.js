@@ -163,7 +163,11 @@ window.addEventListener('load', () => {
           `Add Pack ${title}?`,
           description,
           ['YES', 'NO']
-        );
+        ).then((choice) => {
+          if (choice === 0) {
+            registerElementData(text);
+          }
+        });
       } catch (error) {
         const errorPre = document.createElement('pre');
         const errorCode = document.createElement('code');
