@@ -3,8 +3,11 @@ Description=Some experiments with the element pack system.
 
 # Custom Element CSS
 Stuff: #fff555
-Rainbow: { background: linear-gradient(45deg, red, orange, yellow, #3bda3b, #7070ff, #9a49d6); color: white; font-weight: bold; }
+&Rainbow: { background: linear-gradient(45deg, red, orange, yellow, #3bda3b, #7070ff, #9a49d6); color: white; font-weight: bold; }
 
 Stuff (Stuff)
-Rainbow1 (Stuff) [Rainbow]
-Rainbow2 (Rainbow)
+Rainbow1 (Stuff) [&Rainbow]
+
+# Local Categories
+&Air: #ff0000
+Local Air Experiment (&Air)

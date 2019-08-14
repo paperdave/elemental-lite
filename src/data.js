@@ -94,7 +94,7 @@ function setNeedsReload() {
 }
 
 function registerElementData(data, id) {
-  const items = parseElementData(data);
+  const items = parseElementData(data, id);
   const isBuiltIn = id.startsWith('builtin:');
   const disabled = disabledSavefile.includes(id);
   let title = 'Unnamed Pack #' + parseInt(id).toString(36).toUpperCase().substr(0, 5);

@@ -10,8 +10,18 @@ const regexColorColor = /^#[0-9A-Fa-f]{6}$/;
 const regexColorImage = /^https?:\/\/[^ \n\t]+$/;
 const regexColorCSS = /^{([^}]*)}$/;
 
-function parseElementData(data) {
+function parseElementData(data, data_uid) {
   const colors = ['none'];
+
+  function processColor(color) {
+    if (color.startsWith('&')) {
+      return `LOCAL_@${data_uid}@${color.substring(1)}`;
+    }
+    if (color.startsWith('LOCAL_@')) {
+      throw new Error(`A category cannot start with "LOCAL_@" (given ${color})`);
+    }
+    return color;
+  }
 
   return data
     // Split by newlines
@@ -35,8 +45,8 @@ function parseElementData(data) {
         const elem1 = matchElement[1].replace(regexEscape, '$1').trim();
         const elem2 = matchElement[2].replace(regexEscape, '$1').trim();
         const result = matchElement[3].replace(regexEscape, '$1').trim();
-        const color = matchElement[4].replace(regexEscape, '$1').trim();
-        const disguise = matchElement[5] && matchElement[5].replace(regexEscape, '$1').trim();
+        const color = processColor(matchElement[4].replace(regexEscape, '$1').trim());
+        const disguise = matchElement[5] && processColor(matchElement[5].replace(regexEscape, '$1').trim());
 
         if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
         if (disguise && !colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
@@ -48,8 +58,8 @@ function parseElementData(data) {
       const matchElementNoCombo = line.match(regexElementNoCombo);
       if (matchElementNoCombo) {
         const result = matchElementNoCombo[1].replace(regexEscape, '$1').trim();
-        const color = matchElementNoCombo[2].replace(regexEscape, '$1').trim();
-        const disguise = matchElementNoCombo[3] && matchElementNoCombo[3].replace(regexEscape, '$1').trim();
+        const color = processColor(matchElementNoCombo[2].replace(regexEscape, '$1').trim());
+        const disguise = matchElementNoCombo[3] && processColor(matchElementNoCombo[3].replace(regexEscape, '$1').trim());
 
         if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
         if (disguise && !colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
@@ -60,7 +70,7 @@ function parseElementData(data) {
       // Color: #112233
       const matchColor = line.match(regexColor);
       if (matchColor) {
-        const name = matchColor[1].replace(regexEscape, '$1').trim();
+        const name = processColor(matchColor[1].replace(regexEscape, '$1').trim());
         const color = matchColor[2].replace(regexEscape, '$1').trim();
 
         let css = '';
