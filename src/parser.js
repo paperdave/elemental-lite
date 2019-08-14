@@ -1,7 +1,7 @@
 // Manages parsing the element format.
-const regexElementNoCombo = /^((?:[^!*{};()=:\\\-_]|\\.)+)\(((?:[^!*{};()=:\\\-_]|\\.)+)\) *(?:\[([^"'!*{};()=:\-_]+)\])?$/;
-const regexElement = /^((?:[^!*{};()=:\\\-_]|\\.)+|\((?:[^!*{};()=:\\\-_]|\\.)+\) *)\+([^{}()=+:_]+| *\((?:[^!*{};()=:\\\-_]|\\.)+\) *)=([^{}()=+:_]+)\(([^"'!*{};()=:\-_]+)\) *(?:\[([^"'!*{};()=:\-_]+)\])?$/;
-const regexColor = /^([^"'!*{};()=:\-_]+) *: *(#[0-9A-Fa-f]{6}|{[^}]*}|https?:\/\/[^ \n\t]+|null)$/;
+const regexElementNoCombo = /^((?:[^!*{};()=:\\\-_]|\\.)+)\(((?:[^!*{};()=:\\\-_]|\\.)+)\) *(?:\[([^#"'!*{};()=:\-_]+|#[0-9A-Fa-f]{6}|{[^}]*}|https?:\/\/[^ \n\t]+)\])?$/;
+const regexElement = /^((?:[^!*{};()=:\\\-_]|\\.)+|\((?:[^!*{};()=:\\\-_]|\\.)+\) *)\+([^{}()=+:_]+| *\((?:[^!*{};()=:\\\-_]|\\.)+\) *)=([^{}()=+:_]+)\(([^#"'!*{};()=:\-_]+)\) *(?:\[([^#"'!*{};()=:\-_]+|#[0-9A-Fa-f]{6}|{[^}]*}|https?:\/\/[^ \n\t]+)\])?$/;
+const regexColor = /^([^#"'!*{};()=:\-_]+) *: *(#[0-9A-Fa-f]{6}|{[^}]*}|https?:\/\/[^ \n\t]+|null)$/;
 const regexTitle = /^Title *= *(.*)$/;
 const regexDescription = /^Description *= *(.*)$/;
 const regexElemComment = /^((?:[^!*{};()=:\\\-_]|\\.)+) *- *(.*)$/;
@@ -15,13 +15,43 @@ function parseElementData(data, data_uid) {
 
   function processColor(color) {
     if (color.startsWith('&')) {
-      return `LOCAL_@${data_uid}@${color.substring(1)}`;
+      return `LOCAL@${data_uid}@${color.substring(1)}`;
     }
-    if (color.startsWith('LOCAL_@')) {
-      throw new Error(`A category cannot start with "LOCAL_@" (given ${color})`);
+    if (color.startsWith('LOCAL@')) {
+      throw new Error(`A category cannot start with "LOCAL@" (given ${color})`);
+    }
+    if (color.startsWith('INLINE@')) {
+      throw new Error(`A category cannot start with "INLINE@" (given ${color})`);
     }
     return color;
   }
+
+  function parseColorData(color) {
+    const matchColorColor = color.match(regexColorColor);
+    if (matchColorColor) {
+
+      const rgb = parseInt(color.substring(1), 16);
+      const r = rgb >> 16 & 0xff;
+      const g = rgb >> 8 & 0xff;
+      const b = rgb >> 0 & 0xff;
+      // calculate color brightness
+      const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+      return `background-color:${color};color:${brightness > 100 ? '#000' : '#fff'}`;
+    }
+
+    const matchColorImage = color.match(regexColorImage);
+    if (matchColorImage) {
+      return `background-image:url(${color})`;
+    }
+
+    const matchColorCSS = color.match(regexColorCSS);
+    if (matchColorCSS) {
+      return matchColorCSS[1];
+    }
+  }
+
+  let extraEntries = [];
 
   return data
     // Split by newlines
@@ -46,10 +76,20 @@ function parseElementData(data, data_uid) {
         const elem2 = matchElement[2].replace(regexEscape, '$1').trim();
         const result = matchElement[3].replace(regexEscape, '$1').trim();
         const color = processColor(matchElement[4].replace(regexEscape, '$1').trim());
-        const disguise = matchElement[5] && processColor(matchElement[5].replace(regexEscape, '$1').trim());
+        let disguise = matchElement[5] && processColor(matchElement[5].replace(regexEscape, '$1').trim());
 
         if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
-        if (disguise && !colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
+
+        if(disguise) {
+          const disguiseCSS = parseColorData(disguise);
+
+          if(disguiseCSS) {
+            disguise = 'INLINE@' + result;
+            colors.push(toInternalName('INLINE@' + result));
+            extraEntries.push({ type: 'color', name: disguise, css: disguiseCSS });
+          }
+          if (!colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
+        }
 
         return { type: 'element', elem1, elem2, result, color, disguise };
       }
@@ -59,11 +99,20 @@ function parseElementData(data, data_uid) {
       if (matchElementNoCombo) {
         const result = matchElementNoCombo[1].replace(regexEscape, '$1').trim();
         const color = processColor(matchElementNoCombo[2].replace(regexEscape, '$1').trim());
-        const disguise = matchElementNoCombo[3] && processColor(matchElementNoCombo[3].replace(regexEscape, '$1').trim());
+        let disguise = matchElementNoCombo[3] && processColor(matchElementNoCombo[3].replace(regexEscape, '$1').trim());
 
         if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
-        if (disguise && !colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
 
+        if (disguise) {
+          const disguiseCSS = parseColorData(disguise);
+
+          if (disguiseCSS) {
+            disguise = 'INLINE@' + result;
+            colors.push(toInternalName('INLINE@' + result));
+            extraEntries.push({ type: 'color', name: disguise, css: disguiseCSS });
+          }
+          if (!colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
+        }
         return { type: 'element', result, color, disguise };
       }
 
@@ -73,35 +122,7 @@ function parseElementData(data, data_uid) {
         const name = processColor(matchColor[1].replace(regexEscape, '$1').trim());
         const color = matchColor[2].replace(regexEscape, '$1').trim();
 
-        let css = '';
-
-        (function() {
-          const matchColorColor = color.match(regexColorColor);
-          if (matchColorColor) {
-
-            const rgb = parseInt(color.substring(1), 16);
-            const r = rgb >> 16 & 0xff;
-            const g = rgb >> 8 & 0xff;
-            const b = rgb >> 0 & 0xff;
-            // calculate color brightness
-            const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-            css = `background-color:${color};color:${brightness > 100 ? '#000' : '#fff'}`;
-            return;
-          }
-
-          const matchColorImage = color.match(regexColorImage);
-          if (matchColorImage) {
-            css = `background-image:url(${color})`;
-            return;
-          }
-
-          const matchColorCSS = color.match(regexColorCSS);
-          if (matchColorCSS) {
-            css = matchColorCSS[1];
-            return;
-          }
-        })();
+        let css = parseColorData(color);
 
         colors.push(toInternalName(name));
 
@@ -131,6 +152,7 @@ function parseElementData(data, data_uid) {
 
       throw Error(`Cannot parse line #${index + 1} "${line}"`);
     })
+    .concat(extraEntries)
     // Remove Comments from array, aka null objects.
     .filter((x) => x !== null);
 }

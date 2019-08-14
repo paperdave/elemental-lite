@@ -228,7 +228,7 @@ function addElementToGame(element) {
   let categoryDiv = elementContainer.querySelector(`[data-category="${element.color}"]`);
   if (!categoryDiv) {
     const header = document.createElement('h3');
-    header.appendChild(document.createTextNode(colors[element.color].name.replace(/^LOCAL_@.*@/, '')));
+    header.appendChild(document.createTextNode(colors[element.color].name.replace(/^LOCAL@.*@/, '')));
     elementContainer.appendChild(header);
     categoryDiv = document.createElement('div');
     categoryDiv.setAttribute('data-category', element.color);
