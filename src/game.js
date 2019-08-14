@@ -72,10 +72,10 @@ function updateElementCounter() {
 }
 
 // Makes the HTML for an element
-function ElementDom({ color, name }) {
+function ElementDom({ color, disguise, name }) {
   const elem = document.createElement('div');
   elem.appendChild(document.createTextNode(name));
-  elem.className = `elem ${toCSSValidName(color)}`;
+  elem.className = `elem ${toCSSValidName(disguise || color)}`;
   return elem;
 }
 // Adds an element and has most element logic
@@ -202,7 +202,7 @@ function addElementToGame(element) {
 
     const stats = elementStats[toInternalName(element.name)];
 
-    infoContainer.querySelector('#info-elem').className = 'elem ' + toCSSValidName(element.color);
+    infoContainer.querySelector('#info-elem').className = 'elem ' + toCSSValidName(element.disguise || element.color);
     infoContainer.querySelector('#info-elem').innerText = element.name;
     infoContainer.querySelector('#info-id').innerText = element.id;
     infoContainer.querySelector('#info-combo').innerText = stats.uses;

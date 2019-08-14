@@ -1,6 +1,6 @@
 // Manages parsing the element format.
-const regexElementNoCombo = /^((?:[^!*{};()=:\\\-_]|\\.)+)\(((?:[^!*{};()=:\\\-_]|\\.)+)\)$/;
-const regexElement = /^((?:[^!*{};()=:\\\-_]|\\.)+|\((?:[^!*{};()=:\\\-_]|\\.)+\) *)\+([^{}()=+:_]+| *\((?:[^!*{};()=:\\\-_]|\\.)+\) *)=([^{}()=+:_]+)\(([^"'!*{};()=:\-_]+)\)$/;
+const regexElementNoCombo = /^((?:[^!*{};()=:\\\-_]|\\.)+)\(((?:[^!*{};()=:\\\-_]|\\.)+)\) *(?:\[([^"'!*{};()=:\-_]+)\])?$/;
+const regexElement = /^((?:[^!*{};()=:\\\-_]|\\.)+|\((?:[^!*{};()=:\\\-_]|\\.)+\) *)\+([^{}()=+:_]+| *\((?:[^!*{};()=:\\\-_]|\\.)+\) *)=([^{}()=+:_]+)\(([^"'!*{};()=:\-_]+)\) *(?:\[([^"'!*{};()=:\-_]+)\])?$/;
 const regexColor = /^([^"'!*{};()=:\-_]+) *: *(#[0-9A-Fa-f]{6}|{[^}]*}|https?:\/\/[^ \n\t]+|null)$/;
 const regexTitle = /^Title *= *(.*)$/;
 const regexDescription = /^Description *= *(.*)$/;
@@ -36,10 +36,12 @@ function parseElementData(data) {
         const elem2 = matchElement[2].replace(regexEscape, '$1').trim();
         const result = matchElement[3].replace(regexEscape, '$1').trim();
         const color = matchElement[4].replace(regexEscape, '$1').trim();
+        const disguise = matchElement[5] && matchElement[5].replace(regexEscape, '$1').trim();
 
         if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
+        if (disguise && !colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
 
-        return { type: 'element', elem1, elem2, result, color };
+        return { type: 'element', elem1, elem2, result, color, disguise };
       }
 
       // Element (Color)
@@ -47,10 +49,12 @@ function parseElementData(data) {
       if (matchElementNoCombo) {
         const result = matchElementNoCombo[1].replace(regexEscape, '$1').trim();
         const color = matchElementNoCombo[2].replace(regexEscape, '$1').trim();
+        const disguise = matchElementNoCombo[3] && matchElementNoCombo[3].replace(regexEscape, '$1').trim();
 
         if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
+        if (disguise && !colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
 
-        return { type: 'element', result, color };
+        return { type: 'element', result, color, disguise };
       }
 
       // Color: #112233

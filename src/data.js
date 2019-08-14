@@ -51,7 +51,7 @@ function getStats(name) {
   return elementStats[internalName];
 }
 
-function registerElement(name, color, recipe1, recipe2) {
+function registerElement(name, color, recipe1, recipe2, disguise) {
   const internalName = toInternalName(name);
   const newElement = !(internalName in elements);
   if (newElement) {
@@ -59,6 +59,7 @@ function registerElement(name, color, recipe1, recipe2) {
       id: ++nextID,
       name,
       color: toInternalName(color),
+      disguise: disguise && toInternalName(disguise),
     };
   }
 
@@ -105,7 +106,7 @@ function registerElementData(data, id) {
       if (entry.type === 'color') {
         registerColor(entry.name, entry.css);
       } else if (entry.type === 'element') {
-        registerElement(entry.result, entry.color, entry.elem1, entry.elem2);
+        registerElement(entry.result, entry.color, entry.elem1, entry.elem2, entry.disguise);
       } else if (entry.type === 'comment') {
         const internalName = toInternalName(entry.elem);
         if (!comments[internalName]) {
