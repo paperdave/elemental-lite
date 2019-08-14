@@ -1,0 +1,6 @@
+Title=Element Pack Experiments and Examples
+Description=Some experiments with the element pack system.
+
+# Custom Element CSS
+Rainbow: { background: linear-gradient(45deg, red, orange, yellow, #3bda3b, #7070ff, #9a49d6); color: white; font-weight: bold; }
+Rainbow (Rainbow)

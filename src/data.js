@@ -23,24 +23,13 @@ function toCSSValidName(name) {
   return 'color' + colorCssMap.indexOf(name);
 }
 
-function registerColor(name, color) {
+function registerColor(name, css) {
   const internalName = toInternalName(name);
 
   if (internalName in colors) {return;}
-  colors[internalName] = { color, name };
+  colors[internalName] = { css, name };
 
-  const rgb = parseInt(color.substring(1), 16);
-  const r = rgb >> 16 & 0xff;
-  const g = rgb >> 8 & 0xff;
-  const b = rgb >> 0 & 0xff;
-  // calculate color brightness
-  const brightness = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-  if (brightness > 100) {
-    colorStyleTag.sheet.insertRule(`.${toCSSValidName(internalName)} { background-color: ${color} }`, 0);
-  } else {
-    colorStyleTag.sheet.insertRule(`.${toCSSValidName(internalName)} { background-color: ${color}; color: white }`, 0);
-  }
+  colorStyleTag.sheet.insertRule(`.${toCSSValidName(internalName)} { ${css} }`, 0);
 }
 
 let nextID = 0;
@@ -114,7 +103,7 @@ function registerElementData(data, id) {
     }
     if (!disabled) {
       if (entry.type === 'color') {
-        registerColor(entry.name, entry.color);
+        registerColor(entry.name, entry.css);
       } else if (entry.type === 'element') {
         registerElement(entry.result, entry.color, entry.elem1, entry.elem2);
       } else if (entry.type === 'comment') {

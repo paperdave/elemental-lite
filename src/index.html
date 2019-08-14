@@ -71,6 +71,10 @@
     </div>
     <div id="changelog" class="collapsed">
       <div>
+        <h3>Elemental Lite v1.6 (unreleased)</h3>
+        <ul>
+          <li>Category with Image or Custom CSS</li>
+        </ul>
         <h3>Elemental Lite v1.5 (2019-07-23)</h3>
         <ul>
           <li>Feature: A Logo.</li>
@@ -153,11 +157,15 @@
         const tag = document.createElement('script');
         tag.src = url;
         tag.onload = done;
+        tag.onerror = () => {
+          console.log('Library failed to load, game may not perform correctly.');
+          done();
+        };
         document.body.appendChild(tag);
       });
     })).then(() => {
       async function seq(a) {for (let x of a) { await x(); }}
-      converter = new showdown.Converter();
+      converter = window.showdown && new showdown.Converter();
       document.getElementById('version').innerText = version;
       seq([
         './dialog.js',

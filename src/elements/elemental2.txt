@@ -10,7 +10,7 @@
 #
 
 # Display Name In-Game
-Title=Elemental 2 (Built In)
+Title=Elemental 2
 Description=Elemental 2 Raw Data by Cary Huang... in the Elemental Lite format
 
 # Colors

@@ -1,13 +1,14 @@
 // load and manage loading the built in packs, also handles loading screen.
 
-function fetchAndRegisterElementPack(url) {
+function fetchAndRegisterElementPack(url, enabled) {
   fetch(url)
     .then((r) => r.text())
-    .then((text) => (registerElementData(text, 'builtin:' +url), text));
+    .then((text) => (registerElementData(text, 'builtin:' + url, enabled), text));
 }
 
 Promise.all([
   fetchAndRegisterElementPack('./elements/elemental2.txt'),
+  fetchAndRegisterElementPack('./elements/experiments.txt', false),
   // ...add more default packs
 ]).then(() => {
   document.getElementById('loading').remove();
