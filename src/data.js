@@ -93,7 +93,7 @@ function setNeedsReload() {
   document.getElementById('reload-tip').style.display = 'contents';
 }
 
-function registerElementData(data, id) {
+function registerElementData(data, id, actuallyAddElements = true) {
   const items = parseElementData(data, id);
   const isBuiltIn = id.startsWith('builtin:');
   const disabled = disabledSavefile.includes(id);
@@ -102,7 +102,7 @@ function registerElementData(data, id) {
     if (entry.type === 'title') {
       title = entry.title;
     }
-    if (!disabled) {
+    if (!disabled && actuallyAddElements) {
       if (entry.type === 'color') {
         registerColor(entry.name, entry.css);
       } else if (entry.type === 'element') {

@@ -109,6 +109,7 @@ a { -webkit-user-drag: none; }
 }
 #bottom {
   height: 2em;
+  min-height: 2em;
   background: black;
   color: white;
   display: flex;

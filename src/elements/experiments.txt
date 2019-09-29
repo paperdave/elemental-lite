@@ -1,5 +1,8 @@
+Id=example
 Title=Element Pack Experiments and Examples
 Description=Some experiments with the element pack system.
+LoadAfter=elemental2
+Version=1
 
 # Custom Element CSS / Disguise
 Stuff: #fff555

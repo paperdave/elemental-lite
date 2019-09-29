@@ -10,8 +10,12 @@
 #
 
 # Display Name In-Game
+Id=elemental2
 Title=Elemental 2
 Description=Elemental 2 Raw Data by Cary Huang... in the Elemental Lite format
+Version=1.7
+
+Import base
 
 # Colors
 Air:                       #B4D8FC
@@ -41,10 +45,10 @@ Events:                    #E0E0E0
 Civilization:              #907070
 
 # Base Elements
-Air (Air)
-Earth (Earth)
-Fire (Fire)
-Water (Water)
+#Air (Air)
+#Earth (Earth)
+#Fire (Fire)
+#Water (Water)
 
 # Elements
 Air + Earth = Dust (Air)

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta data-game-version='1.6-beta'>
+  <meta data-game-version='1.7'>
   <title>Elemental Lite</title>
 
   <link rel="stylesheet" href="./style.css">
@@ -71,7 +71,15 @@
     </div>
     <div id="changelog" class="collapsed">
       <div>
-        <h3>Elemental Lite v1.6 (unreleased)</h3>
+        <h3>Elemental Lite v1.7 (2019-09-28)</h3>
+        <ul>
+          <li>Feature: Pack Load Order Controls (LoadBefore and LoadAfter)</li>
+          <li>Feature: Pack Dependencies (via Import)</li>
+          <li>Feature: Pack IDs</li>
+          <li>Feature: Pack Versions</li>
+          <li>Bug Fix: Minor UI Glitch</li>
+        </ul>
+        <h3>Elemental Lite v1.6 (2019-08-14)</h3>
         <ul>
           <li>Feature: Category with Image or Custom CSS</li>
           <li>Feature: Element Disguises</li>
@@ -178,7 +186,7 @@
         './parser.js',
         './data.js',
         './drag-upload.js',
-        './init-data.js',
+        './init.js',
       ].map((url) => () => new Promise(done => {
         const tag = document.createElement('script');
         tag.src = url + '?v=' + version;

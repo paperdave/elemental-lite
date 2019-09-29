@@ -102,16 +102,17 @@ function showPackDialog(initCode, isEditMode, packID) {
           parseElementData(text);
           packSavefile.find((x) => x[0] === packID)[1] = text;
           localStorage.setItem('elementPackSavefile', JSON.stringify(packSavefile));
-          setNeedsReload();
         } else {
-          registerElementData(text, id);
+          registerElementData(text, id, false);
         }
+        setNeedsReload();
       } catch (error) {
         const errorPre = document.createElement('pre');
         const errorCode = document.createElement('code');
         errorPre.appendChild(errorCode);
         errorCode.appendChild(document.createTextNode(error.toString()));
 
+        // eslint-disable-next-line no-console
         console.error(error);
 
         ShowDialog(
