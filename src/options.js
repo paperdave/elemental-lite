@@ -49,6 +49,17 @@ darkModeCheckbox.addEventListener('change', () => {
   setIsDarkMode(darkModeCheckbox.checked);
 });
 darkModeCheckbox.click();
+const ShowIDCheckbox = document.getElementById('show-pack-id');
+ShowIDCheckbox.checked = !showPackIDs;
+ShowIDCheckbox.addEventListener('change', () => {
+  if (ShowIDCheckbox.checked) {
+    document.body.classList.remove('hide-pack-ids');
+  } else {
+    document.body.classList.add('hide-pack-ids');
+  }
+  setShowPackIDs(ShowIDCheckbox.checked);
+});
+ShowIDCheckbox.click();
 
 document.getElementById('delete-button').addEventListener('click', () => {
   ShowDialog(
@@ -95,15 +106,25 @@ function showPackDialog(initCode, isEditMode, packID) {
         /* Nothing */
       }
 
-      const id = Math.random().toString().substr(2);
+      let id = Math.random().toString().substr(2);
 
       try {
         if (isEditMode) {
-          parseElementData(text);
+          id = packID;
+          const list = parseElementData(text);
+          const idMatch = list.find(x => x.type === 'id');
+          if (idMatch) {
+            id = idMatch.id;
+          }
           packSavefile.find((x) => x[0] === packID)[1] = text;
+          packSavefile.find((x) => x[0] === packID)[0] = id;
           localStorage.setItem('elementPackSavefile', JSON.stringify(packSavefile));
         } else {
-          registerElementData(text, id, false);
+          const list = registerElementData(text, id, false);
+          const idMatch = list.find(x => x.type === 'id');
+          if(idMatch) {
+            id = idMatch.id;
+          }
         }
         setNeedsReload();
       } catch (error) {
@@ -166,8 +187,14 @@ window.addEventListener('load', () => {
           ['YES', 'NO']
         ).then((choice) => {
           if (choice === 0) {
-            const id = Math.random().toString().substr(2);
-            registerElementData(text, id);
+            let id = Math.random().toString().substr(2);
+            const data = parseElementData(text);
+            const idMatch = list.find(x => x.type === 'id');
+            if (idMatch) {
+              id = idMatch.id;
+            }
+            registerElementData(data, id);
+            exportedColorCache[id] = [];
             packSavefile.push([id, text]);
           }
         });

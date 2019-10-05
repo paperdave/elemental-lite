@@ -1,7 +1,7 @@
 Id=base
 Title=The Base Classical Elements
 Description=The four starting points of Air, Earth, Fire, and Water, from which everything else is built upon.
-Version=1.7
+Version=1
 
 Air:                       #B4D8FC
 Earth:                     #B79370

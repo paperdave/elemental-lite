@@ -8,6 +8,7 @@ const regexId = /^Id *= *([^ ]+)$/;
 const regexImport = /^Import +([^ ]+)$/;
 const regexImportNamespaced = /^Import +([^ ]+) +as + ([^ ]+) *$/;
 const regexLoadBefore = /^LoadBefore *= *(.*)$/;
+const regexUpdateURL = /^UpdateURL *= *(.*)$/;
 const regexVersion = /^Version *= *(.*)$/;
 const regexLoadAfter = /^LoadAfter *= *(.*)$/;
 const regexElemComment = /^((?:[^!*{};()=:\\\-_]|\\.)+) *- *(.*)$/;
@@ -16,7 +17,11 @@ const regexColorColor = /^#[0-9A-Fa-f]{6}$/;
 const regexColorImage = /^https?:\/\/[^ \n\t]+$/;
 const regexColorCSS = /^{([^}]*)}$/;
 
-function parseElementData(data, data_uid) {
+const exportedColorCache = {};
+const packDependents = {};
+const packDependencies = {};
+
+function parseElementData(data, data_uid, isLightParse) {
   const definedThings = {
     id: false,
     title: false,
@@ -24,6 +29,7 @@ function parseElementData(data, data_uid) {
     loadBefore: false,
     loadAfter: false,
     version: false,
+    updateURL: false,
   };
 
   const colors = ['none'];
@@ -93,7 +99,7 @@ function parseElementData(data, data_uid) {
         const color = processColor(matchElement[4].replace(regexEscape, '$1').trim());
         let disguise = matchElement[5] && processColor(matchElement[5].replace(regexEscape, '$1').trim());
 
-        if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
+        if (!isLightParse && !colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack. (Line #' + (index + 1) + ')'); }
 
         if(disguise) {
           const disguiseCSS = parseColorData(disguise);
@@ -103,7 +109,7 @@ function parseElementData(data, data_uid) {
             colors.push(toInternalName('INLINE@' + result));
             extraEntries.push({ type: 'color', name: disguise, css: disguiseCSS });
           }
-          if (!colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
+          if (!isLightParse && !colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack. (Line #' + (index + 1) + ')'); }
         }
 
         return { type: 'element', elem1, elem2, result, color, disguise };
@@ -116,7 +122,7 @@ function parseElementData(data, data_uid) {
         const color = processColor(matchElementNoCombo[2].replace(regexEscape, '$1').trim());
         let disguise = matchElementNoCombo[3] && processColor(matchElementNoCombo[3].replace(regexEscape, '$1').trim());
 
-        if (!colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack.'); }
+        if (!isLightParse && !colors.includes(toInternalName(color))) { throw new Error('Cannot Find Color "' + color + '". Each Color must be defined separately in each pack. (Line #' + (index + 1) + ')'); }
 
         if (disguise) {
           const disguiseCSS = parseColorData(disguise);
@@ -126,7 +132,7 @@ function parseElementData(data, data_uid) {
             colors.push(toInternalName('INLINE@' + result));
             extraEntries.push({ type: 'color', name: disguise, css: disguiseCSS });
           }
-          if (!colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack.'); }
+          if (!isLightParse && !colors.includes(toInternalName(disguise))) { throw new Error('Cannot Find Color "' + disguise + '". Each Color must be defined separately in each pack. (Line #' + (index + 1) + ')'); }
         }
         return { type: 'element', result, color, disguise };
       }
@@ -177,7 +183,17 @@ function parseElementData(data, data_uid) {
       const matchImport = line.match(regexImport);
       if (matchImport) {
         const packID = matchImport[1].replace(regexEscape, '$1').trim();
-
+        if (!isLightParse) {
+          if (!exportedColorCache[packID]) {
+            throw new Error(`Pack Dependency "${packID}" is missing.`);
+          }
+          colors.push(...exportedColorCache[packID].map(x => x.toLowerCase()));
+          extraEntries.push(...exportedColorCache[packID].map((x) => ({type:'color', name:x, css:'<imported>'})));
+          packDependents[packID] = (packDependents[packID] || []);
+          packDependents[packID].push(data_uid);
+          packDependencies[data_uid] = (packDependents[data_uid] || []);
+          packDependencies[data_uid].push(packID);
+        }
         return { type: 'import', packID };
       }
       const matchLoadBefore = line.match(regexLoadBefore);
@@ -216,6 +232,16 @@ function parseElementData(data, data_uid) {
 
         return { type: 'description', description };
       }
+      const matchUpdateURL = line.match(regexUpdateURL);
+      if (matchUpdateURL) {
+        if(definedThings.updateURL) {
+          throw new Error(`Duplicate UpdateURL Definition on line #${index + 1}.`);
+        }
+        definedThings.updateURL = true;
+        const url = matchUpdateURL[1].replace(regexEscape, '$1').trim();
+
+        return { type: 'updateurl', url };
+      }
 
       const matchComment = line.match(regexElemComment);
       if (matchComment) {
@@ -230,6 +256,10 @@ function parseElementData(data, data_uid) {
     .concat(extraEntries)
     // Remove Comments from array, aka null objects.
     .filter((x) => x !== null);
+
+  if (isLightParse) {
+    exportedColorCache[data_uid] = list.filter(x => x.type === 'color').map(x => x.name);
+  }
 
   return list;
 }

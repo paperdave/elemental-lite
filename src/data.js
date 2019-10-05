@@ -93,30 +93,21 @@ function setNeedsReload() {
   document.getElementById('reload-tip').style.display = 'contents';
 }
 
-function registerElementData(data, id, actuallyAddElements = true) {
-  const items = parseElementData(data, id);
-  const isBuiltIn = id.startsWith('builtin:');
+function AddPackOptions(title, id, data, isBuiltIn, targetElement) {
+  const realTitle = typeof title === 'string' ? title : title[0].nodeValue;
+  if(typeof title === 'string') {
+    const packTitleFormattedId = document.createElement('span');
+    packTitleFormattedId.innerText = ' <' + id + '>';
+    packTitleFormattedId.style.color = '#666';
+    packTitleFormattedId.classList.add('packidx');
+    title = [
+      document.createTextNode(title),
+      packTitleFormattedId,
+    ];
+  }
   const disabled = disabledSavefile.includes(id);
-  let title = 'Unnamed Pack #' + parseInt(id).toString(36).toUpperCase().substr(0, 5);
-  items.forEach((entry) => {
-    if (entry.type === 'title') {
-      title = entry.title;
-    }
-    if (!disabled && actuallyAddElements) {
-      if (entry.type === 'color') {
-        registerColor(entry.name, entry.css);
-      } else if (entry.type === 'element') {
-        registerElement(entry.result, entry.color, entry.elem1, entry.elem2, entry.disguise);
-      } else if (entry.type === 'comment') {
-        const internalName = toInternalName(entry.elem);
-        if (!comments[internalName]) {
-          comments[internalName] = new Set();
-        }
-        comments[internalName].add(entry.comment);
-      }
-    }
-  });
 
+  targetElement = targetElement || packDiv;
   const packLi = document.createElement('li');
   packLi.appendChild(document.createTextNode('- '));
 
@@ -124,7 +115,9 @@ function registerElementData(data, id, actuallyAddElements = true) {
   packRemoveButton.appendChild(document.createTextNode('Remove'));
   if (!isBuiltIn) {
     packRemoveButton.addEventListener('click', () => {
-      ShowDialog('Delete Pack ' + title, 'You can add it back if you want later.', ['YES', 'NO'])
+      const hasDependents = !!(packDependents[id] && packDependents[id].length);
+      const desc = hasDependents ? `NOTICE: ${packDependents[id].length} pack${packDependents[id].length === 1 ? '' : 's'} depend on this pack (${packDependents[id].join(', ')}). Are you sure you want to delete it.` : 'Nothing depends on this pack. Are you still sure you want to delete it.';
+      ShowDialog('Remove "' + realTitle + '"', desc, ['YES', 'NO'])
         .then((choice) => {
           if (choice === 0) {
             let item = JSON.parse(localStorage.getItem('elementPackSavefile'));
@@ -165,33 +158,112 @@ function registerElementData(data, id, actuallyAddElements = true) {
   const packDownloadButton = document.createElement('button');
   packDownloadButton.appendChild(document.createTextNode('Download'));
   packDownloadButton.addEventListener('click', () => {
-    download(data, title, '.txt', 'text/plain');
+    download(data, realTitle, '.txt', 'text/plain');
   });
   packLi.appendChild(packDownloadButton);
 
   const packEnableDisableButton = document.createElement('input');
   packEnableDisableButton.type = 'checkbox';
   packEnableDisableButton.checked = !disabled;
+  packEnableDisableButton.setAttribute('data-packdisable-id', id);
   packEnableDisableButton.addEventListener('change', (ev) => {
     if (packEnableDisableButton.checked) {
       disabledSavefile.remove(id);
+      if (packDependencies[id]) {
+        packDependencies[id].forEach((id) => {
+          const checkbox = document.querySelector(`[data-packdisable-id="${id}"]`);
+          if (!checkbox.checked) checkbox.click();
+        });
+      }
     } else {
       disabledSavefile.add(id);
+      if (packDependents[id]) {
+        packDependents[id].forEach((id) => {
+          const checkbox = document.querySelector(`[data-packdisable-id="${id}"]`);
+          if (checkbox.checked) checkbox.click();
+        });
+      }
     }
     setNeedsReload();
   });
   packLi.appendChild(packEnableDisableButton);
 
   const packText = document.createElement('span');
-  packText.appendChild(document.createTextNode(title));
+  if (typeof title === 'string') {
+    packText.appendChild(
+      document.createTextNode(title)
+    );
+  } else {
+    title.filter(Boolean).forEach((x) => {
+      if (typeof x === 'string') {
+        packText.appendChild(
+          document.createTextNode(x)
+        );
+      } else {
+        packText.appendChild(x);
+      }
+    });
+  }
   packText.classList.add('name');
   packLi.appendChild(packText);
 
   if (isBuiltIn) {
-    packDiv.insertBefore(packLi, packDiv.firstChild);
+    packLi.classList.add('data-builtin');
+    const lastBuiltIn = [...targetElement.querySelectorAll('.data-builtin')].pop();
+    if (lastBuiltIn) {
+      targetElement.insertBefore(packLi, lastBuiltIn.nextElementSibling);
+    } else {
+      targetElement.insertBefore(packLi, targetElement.firstChild);
+    }
   } else {
-    packDiv.appendChild(packLi);
+    targetElement.appendChild(packLi);
+  }
+}
+
+function registerElementData(data, id, actuallyAddElements = true, isBuiltIn) {
+  isBuiltIn = false;
+  const items = Array.isArray(data) || parseElementData(data, id);
+  const disabled = disabledSavefile.includes(id);
+  let title = 'Unnamed Pack';
+  items.forEach((entry) => {
+    if (entry.type === 'title') {
+      title = entry.title;
+    }
+    if (!disabled && actuallyAddElements) {
+      if (entry.type === 'color') {
+        registerColor(entry.name, entry.css);
+      } else if (entry.type === 'element') {
+        registerElement(entry.result, entry.color, entry.elem1, entry.elem2, entry.disguise);
+      } else if (entry.type === 'comment') {
+        const internalName = toInternalName(entry.elem);
+        if (!comments[internalName]) {
+          comments[internalName] = new Set();
+        }
+        comments[internalName].add(entry.comment);
+      }
+    }
+  });
+
+  if (isSafeMode) {
+    const target = document.getElementById('errorpackeditor');
+    AddPackOptions(
+      title + ' <' + id + '>',
+      id,
+      data,
+      isBuiltIn,
+      target
+    );
+  } else {
+    AddPackOptions(
+      title,
+      id,
+      data,
+      isBuiltIn,
+      null
+    );
   }
 
   updateElementCounter();
+
+  return items;
 }

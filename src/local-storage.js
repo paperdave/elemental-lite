@@ -35,3 +35,7 @@ const isDarkMode = JSON.parse(localStorage.getItem('elementDarkMode') || 'false'
 function setIsDarkMode(isDarkMode) {
   localStorage.setItem('elementDarkMode', JSON.stringify(isDarkMode));
 }
+const showPackIDs = JSON.parse(localStorage.getItem('elementSPID') || 'false');
+function setShowPackIDs(isDarkMode) {
+  localStorage.setItem('elementSPID', JSON.stringify(isDarkMode));
+}

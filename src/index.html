@@ -12,7 +12,7 @@
   </div>
   <div id="actualGame" style='display:none;'>
     <img class="header" src="header.png" alt="Elemental Lite Title">
-    <div id='version'></div>
+    <div class='version'></div>
     <div id='elem-count'></div>
     <p id='helper'>
       Quite a simple elemental clone. Combine two elements to create new elements.
@@ -21,7 +21,6 @@
     <div id="elements">
       <div data-category='none'></div>
     </div>
-    <div id="status"></div>
     <div id="info-pane">
       <div id="info-elem" class="elem"></div>
       <div id='info-info'>
@@ -54,6 +53,11 @@
             <input type="checkbox" id='dark-mode'> Dark Mode
           </p>
         </label>
+        <label>
+          <p>
+            <input type="checkbox" id='show-pack-id'> Show Pack IDs
+          </p>
+        </label>
         <p>
           <button id='delete-button'>Delete Savefile</button>
         </p>
@@ -62,21 +66,28 @@
         <div id='pack-div'>
 
         </div>
-        <button id='pack-add-btn'>Add New</button>
-        <div id='reload-tip' style='display:none'>
-          <button id='btn-reload'>Reload</button>
-          <span>You need to reload the page to apply changes.</span>
+        <div id="pack-div-bottom">
+          <button id='pack-add-btn'>Add New</button>
+          <div id='reload-tip' style='display:none'>
+            <button id='btn-reload'>Reload</button>
+            <span>You need to reload the page to apply changes.</span>
+          </div>
         </div>
       </div>
     </div>
     <div id="changelog" class="collapsed">
       <div>
-        <h3>Elemental Lite v1.7 (2019-09-28)</h3>
+        <h3>Elemental Lite v1.7 (2019-10-05)</h3>
+        <p>
+          Update to do very complex things with packs.
+        </p>
         <ul>
-          <li>Feature: Pack Load Order Controls (LoadBefore and LoadAfter)</li>
+          <li>Feature: Pack Load Order Controls (LoadBefore= and LoadAfter=)</li>
           <li>Feature: Pack Dependencies (via Import)</li>
-          <li>Feature: Pack IDs</li>
-          <li>Feature: Pack Versions</li>
+          <li>Feature: Pack IDs (via Id=)</li>
+          <li>Feature: Pack Versions (via Version=)</li>
+          <li>Feature: Pack Update Urls (via UpdateURL=), but this is ignored.</li>
+          <li></li>
           <li>Bug Fix: Minor UI Glitch</li>
         </ul>
         <h3>Elemental Lite v1.6 (2019-08-14)</h3>
@@ -144,6 +155,21 @@
       <h2>Drop an Element Pack File to Add it.</h2>
     </div>
   </div>
+  <div id="safeMode" style="display:none">
+    <img class="header" src="header.png" alt="Elemental Lite Title">
+    <div class='version'></div>
+    <div id='safecontent' style='flex-grow:1;margin:auto;margin-top:20px;padding:20px;max-width:800px'>
+      <h1 style='text-align:left;color:red;'>Something Went Wrong While Loading</h1>
+      <p>
+        Could not load all your element packs, you may need to enable/disable or add/remove some.
+      </p>
+      <pre>
+        <code id='error-info' style='color:red'></code>
+      </pre>
+      <h3>Packs</h3>
+      <div id="errorpackeditor" style='list-style:none'></div>
+    </div>
+  </div>
   <div id="dialog">
     <div id="dialog_content">
       <h2 id="dialog_title"></h2>
@@ -154,6 +180,8 @@
       </div>
     </div>
   </div>
+
+    <div id="status"></div>
 
   <script>
     let converter;
@@ -177,7 +205,7 @@
     })).then(() => {
       async function seq(a) {for (let x of a) { await x(); }}
       converter = window.showdown && new showdown.Converter();
-      document.getElementById('version').innerText = version;
+      document.querySelectorAll('.version').forEach(x => x.innerText = version);
       seq([
         './dialog.js',
         './local-storage.js',

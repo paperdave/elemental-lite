@@ -160,6 +160,9 @@ a#moreStuff:active {
 #actualGame {
   display: contents;
 }
+#safeMode {
+  display: contents;
+}
 
 #dialog_title {
   text-overflow: ellipsis;
@@ -340,8 +343,10 @@ img.header {
 body.dark img.header {
   filter: invert(1);
 }
-#version {
+.version {
   position: fixed;
   top: 5px;
   left: 5px;
 }
+
+.hide-pack-ids .packidx {display:none}

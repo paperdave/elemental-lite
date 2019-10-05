@@ -15,13 +15,10 @@ Title=Elemental 2
 Description=Elemental 2 Raw Data by Cary Huang... in the Elemental Lite format
 Version=1.7
 
+# The base pack includes the four classical elements.
 Import base
 
 # Colors
-Air:                       #B4D8FC
-Earth:                     #B79370
-Fire:                      #FF934C
-Water:                     #4C93FF
 Space:                     #4C4C4C
 Beverages:                 #B77093
 Materials:                 #EAD4B2
@@ -43,12 +40,6 @@ Existential Crisis Causes: #400080
 People:                    #C6995B
 Events:                    #E0E0E0
 Civilization:              #907070
-
-# Base Elements
-#Air (Air)
-#Earth (Earth)
-#Fire (Fire)
-#Water (Water)
 
 # Elements
 Air + Earth = Dust (Air)
