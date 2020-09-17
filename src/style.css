@@ -339,6 +339,7 @@ img.header {
   width: calc((1278 / 175) * 50px);
   margin: auto;
   margin-top: 20px;
+  /* pointer-events: none; */
 }
 body.dark img.header {
   filter: invert(1);
