@@ -71,7 +71,11 @@ document.body.addEventListener('drop', (ev) => {
 
     packSavefile.push([id, text]);
   };
-  reader.readAsText(file);
+  try {
+    reader.readAsText(file);
+  } catch (error) {
+    setDragging(false);
+  }
 
   document.body.classList.remove('is-dropping-file');
   setDragging(false);
