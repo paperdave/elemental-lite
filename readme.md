@@ -9,6 +9,7 @@ To get the element loading to work, you can't just open the html file, as the ga
 
 - Easy way: [this chrome extension](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb)
 - Recommended Way: Use Node.js Scripts.
+- Other way: Use Python http.server
 
 ## Node.js setup
 Install Node.js, then run in a terminal
@@ -25,3 +26,11 @@ To run tests (spellcheck and style guide)
 ```
 npm run test
 ```
+
+## Python setup
+### Python 2:
+Windows: py -m SimpleHTTPServer 8080
+*nix (macOS): python2 -m SimpleHTTPServer 8080
+### Python3:
+Windows: py -m http.server 8080
+*nix (macOS): python3 -m http.server 8080
